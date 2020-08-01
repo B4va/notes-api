@@ -3,6 +3,8 @@ import * as httpResponses from '../core/helpers/http_responses';
 import * as auth from '../core/auth';
 import buildUser from './user_model';
 
+// TODO : reprendre avec système d'authentifications
+
 export default (usersDao) => {
   /**
    * Méthodes.

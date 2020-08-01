@@ -1,6 +1,6 @@
 export default (database) => {
 
-  // TODO
+  // TODO : reprise de la modélisation après système d'authentification
 
   return Object.freeze({
     create,

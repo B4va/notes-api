@@ -2,6 +2,8 @@ import * as httpErrors from '../core/helpers/http_errors';
 import * as httpResponses from '../core/helpers/http_responses';
 import buildNote from './note_model';
 
+// TODO : reprendre avec système d'authentifications
+
 export default (notesDao) => {
   /**
    * Méthodes.
