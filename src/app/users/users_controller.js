@@ -1,6 +1,6 @@
 import * as httpErrors from '../../helpers/http_errors';
 import * as httpResponses from '../../helpers/http_responses';
-import * as auth from '../../helpers/authentication';
+import * as auth from '../auth';
 import buildUser from './user_model';
 
 export default (usersDao) => {
@@ -35,8 +35,7 @@ export default (usersDao) => {
 
   /**
    * Ajoute un utilisateur et renvoie les informations enregistrées.
-   * Validations : Données, format des données, validité
-   * des données.
+   * Validations : Données.
    * @param {Object} httpRequest - requête http
    */
   async function postUser(httpRequest) {
@@ -57,8 +56,7 @@ export default (usersDao) => {
 
   /**
    * Modifie les données de l'utilisateur connecté.
-   * Validations : Connexion, données, format des données, validité
-   * des données.
+   * Validations : Connexion, données.
    * @param {Object} httpRequest - requête http
    */
   async function putUser(httpRequest) {
@@ -72,7 +70,7 @@ export default (usersDao) => {
     }
     try {
       const result = usersDao.update(httpRequest.userId, user);
-      return httpResponses.ok(result);
+      return httpResponses.noContent(result);
     } catch (e) {
       return httpErrors.serverError();
     }
@@ -86,6 +84,6 @@ export default (usersDao) => {
   async function deleteUser(httpRequest) {
     auth.authenticate(httpRequest);
     const result = usersDao.remove(httpRequest.userId);
-    return httpResponses.ok(result);
+    return httpResponses.noContent(result);
   }
 };

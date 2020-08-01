@@ -13,10 +13,12 @@ export default (userInfo) => {
   }
 
   function validateEmail(email, errors) {
+    // Présence
     if (!email) {
       errors.push('Une adresse email doit être renseignée.');
       return false;
     }
+    // Format
     if (!isValidEmail(email)) {
       errors.push("L'adresse email renseignée est invalide.");
       return false;
@@ -25,10 +27,12 @@ export default (userInfo) => {
   }
 
   function validatePassword(password, errors) {
+    // Présence
     if (!password) {
       errors.push('Un mot de passe doit être renseigné.');
       return false;
     }
+    // Longueur
     if (password.length < 6) {
       errors.push("Le mot de passe doit être long d'au moins 6 caractères.");
       return false;

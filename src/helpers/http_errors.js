@@ -23,4 +23,4 @@ export const authValidationError = () =>
   buildHttpError(401, 'Accès non autorisé.');
 
 export const noDataFoundError = () =>
-  buildHttpError(400, "Aucune donnée n'a été trouvée");
+  buildHttpError(404, "Aucune donnée n'a été trouvée");

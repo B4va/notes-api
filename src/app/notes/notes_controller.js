@@ -94,7 +94,7 @@ export default (notesDao) => {
     }
     try {
       const result = notesDao.update(httpRequest.pathParams.id, note);
-      return httpResponses.updated('Note modifiée.');
+      return httpResponses.noContent('Note modifiée.');
     } catch (e) {
       return httpErrors.serverError();
     }
@@ -111,7 +111,7 @@ export default (notesDao) => {
       return httpErrors.noDataFoundError();
     }
     const result = notesDao.remove(httpRequest.pathParams.id);
-    return httpResponses.deleted('Note supprimée');
+    return httpResponses.noContent('Note supprimée');
   }
 
   /**
@@ -121,6 +121,6 @@ export default (notesDao) => {
    */
   async function deleteNotes(httpRequest) {
     const result = notesDao.removeAll();
-    return httpResponses.deleted('Notes supprimées');
+    return httpResponses.noContent('Notes supprimées');
   }
 };

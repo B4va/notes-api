@@ -14,6 +14,4 @@ export const ok = (result) => buildHttpResponse(200, result);
 
 export const created = (result) => buildHttpResponse(201, result);
 
-export const deleted = (result) => buildHttpResponse(200, result);
-
-export const updated = (result) => buildHttpResponse(200, result);
+export const noContent = (result) => buildHttpResponse(204, result);
