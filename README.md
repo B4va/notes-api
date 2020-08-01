@@ -2,10 +2,6 @@
 
 > API de test, réutilisable comme base technique. **Licence MIT**.
 
-![node](img_readme/node.png)
-![express](img_readme/express.png)
-![mongoDB](img_readme/mongo.png)
-
 ## Organisation
 
 - `index.js` : Lancement du serveur **Node JS**.
