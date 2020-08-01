@@ -3,9 +3,9 @@ import buildNotesHandler from './app/notes';
 
 const root = '/api/v0';
 
-export default (app, database) => {
-  const usersHandler = buildUsersHandler(database);
-  const notesHandler = buildNotesHandler(database);
+export default (app, database, authManager) => {
+  const usersHandler = buildUsersHandler(database, authManager);
+  const notesHandler = buildNotesHandler(database, authManager);
 
   /**
    * USERS
@@ -14,6 +14,7 @@ export default (app, database) => {
   app.post(`${root}/users`, usersHandler); // TODO : POST nouvel utilisateur
   app.put(`${root}/users`, usersHandler); // TODO : PUT maj utilisateur connecté
   app.delete(`${root}/users`, usersHandler); // TODO : DELETE utilisateur connecté
+  app.patch(`${root}/users`, usersHandler); // TODO : PATCH connexion utilisateur
 
   /**
    * NOTES

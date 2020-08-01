@@ -2,10 +2,12 @@ import * as httpErrors from '../core/helpers/http_errors';
 import * as httpResponses from '../core/helpers/http_responses';
 import * as auth from '../core/auth';
 import buildUser from './user_model';
+import adaptAuth from '../core/helpers/auth_adapter';
 
-// TODO : reprendre avec système d'authentifications
+// TODO : reprendre avec système d'authentification
+// ! à tester
 
-export default (usersDao) => {
+export default (usersDao, authManager) => {
   /**
    * Méthodes.
    */
@@ -19,6 +21,14 @@ export default (usersDao) => {
         return putUser(httpRequest);
       case 'DELETE':
         return deleteUser(httpRequest);
+      case 'PATCH':
+        if (httpRequest.queryParams.auth === 'revoke') {
+          return revokeUser(httpRequest);
+        } else if (httpRequest.queryParams.auth === 'login') {
+          return loginUser(httpRequest);
+        } else {
+          return httpErrors.serverError();
+        }
       default:
         return httpErrors.serverError();
     }
@@ -30,8 +40,13 @@ export default (usersDao) => {
    * @param {Object} httpRequest - requête http
    */
   async function getUser(httpRequest) {
-    auth.authenticate(httpRequest);
-    const result = await usersDao.read(httpRequest.userId);
+    const token = adaptAuth(httpRequest);
+    try {
+      const userId = await authManager.verifyToken(token);
+    } catch (e) {
+      return httpErrors.authValidationError();
+    }
+    const result = await usersDao.read(userId);
     return httpResponses.ok(result);
   }
 
@@ -62,7 +77,12 @@ export default (usersDao) => {
    * @param {Object} httpRequest - requête http
    */
   async function putUser(httpRequest) {
-    auth.authenticate(httpRequest);
+    const token = adaptAuth(httpRequest);
+    try {
+      const userId = await authManager.verifyToken(token);
+    } catch (e) {
+      return httpErrors.authValidationError();
+    }
     const userInfo = httpRequest.body;
     let user;
     try {
@@ -71,7 +91,7 @@ export default (usersDao) => {
       return httpErrors.invalidDataError(e);
     }
     try {
-      const result = usersDao.update(httpRequest.userId, user);
+      const result = usersDao.update(userId, user);
       return httpResponses.noContent(result);
     } catch (e) {
       return httpErrors.serverError();
@@ -84,8 +104,48 @@ export default (usersDao) => {
    * @param {Object} httpRequest - requête http
    */
   async function deleteUser(httpRequest) {
+    const token = adaptAuth(httpRequest);
+    try {
+      const userId = await authManager.verifyToken(token);
+    } catch (e) {
+      return httpErrors.authValidationError();
+    }
     auth.authenticate(httpRequest);
-    const result = usersDao.remove(httpRequest.userId);
+    const result = usersDao.remove(userId);
     return httpResponses.noContent(result);
+  }
+
+  /**
+   * Connecte un utilisateur.
+   * Validations : Authentification.
+   * @param {Object} httpRequest - requête http
+   */
+  async function loginUser(httpRequest) {
+    try {
+      const userId = authManager.authenticateUser(
+        httpRequest.body.email,
+        httpRequest.body.password,
+      );
+    } catch (e) {
+      return httpErrors.authValidationError();
+    }
+    const result = authManager.generateToken(userId);
+    return httpResponses.ok(result);
+  }
+
+  /**
+   * Déconnecte un utilisateur.
+   * Validation : Connexion.
+   * @param {Object} httpRequest - requête http
+   */
+  async function revokeUser(httpRequest) {
+    const token = adaptAuth(httpRequest);
+    try {
+      await authManager.verifyToken(token);
+      const result = await authManager.revokeToken(token);
+      return httpResponses.ok(result);
+    } catch (e) {
+      return httpErrors.authValidationError();
+    }
   }
 };
