@@ -2,9 +2,9 @@
 
 > API de test, réutilisable comme base technique. **Licence MIT**.
 
-![node](img_readme/node.png | width = 50)
-![express](img_readme/express.png | width = 50)
-![mongoDB](img_readme/mongo.png | width = 50)
+![node](img_readme/node.png)
+![express](img_readme/express.png)
+![mongoDB](img_readme/mongo.png)
 
 ## Organisation
 
