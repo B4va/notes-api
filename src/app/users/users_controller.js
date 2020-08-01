@@ -3,22 +3,22 @@ import * as httpResponses from '../../helpers/http_responses';
 import * as auth from '../../helpers/authentication';
 import buildUser from './user_model';
 
-export default usersDao => {
+export default (usersDao) => {
   /**
    * Méthodes.
    */
-  return async httpRequest => {
+  return async (httpRequest) => {
     switch (httpRequest.method) {
       case 'POST':
-        return postUser (httpRequest);
+        return postUser(httpRequest);
       case 'GET':
-        return getUser (httpRequest);
+        return getUser(httpRequest);
       case 'PUT':
-        return putUser (httpRequest);
+        return putUser(httpRequest);
       case 'DELETE':
-        return deleteUser (httpRequest);
+        return deleteUser(httpRequest);
       default:
-        return httpErrors.serverError ();
+        return httpErrors.serverError();
     }
   };
 
@@ -27,10 +27,10 @@ export default usersDao => {
    * Validations : Connexion.
    * @param {Object} httpRequest - requête http
    */
-  async function getUser (httpRequest) {
-    auth.authenticate (httpRequest);
-    const result = await usersDao.read (httpRequest.userId);
-    return httpResponses.ok (result);
+  async function getUser(httpRequest) {
+    auth.authenticate(httpRequest);
+    const result = await usersDao.read(httpRequest.userId);
+    return httpResponses.ok(result);
   }
 
   /**
@@ -39,19 +39,19 @@ export default usersDao => {
    * des données.
    * @param {Object} httpRequest - requête http
    */
-  async function postUser (httpRequest) {
+  async function postUser(httpRequest) {
     const userInfo = httpRequest.body;
     let user;
     try {
-      user = buildUser (userInfo);
+      user = buildUser(userInfo);
     } catch (e) {
-      return httpErrors.invalidDataError (e);
+      return httpErrors.invalidDataError(e);
     }
     try {
-      const result = await usersDao.create (user);
-      return httpResponses.created (result.ops);
+      const result = await usersDao.create(user);
+      return httpResponses.created(result.ops);
     } catch (e) {
-      return httpErrors.serverError ();
+      return httpErrors.serverError();
     }
   }
 
@@ -61,20 +61,20 @@ export default usersDao => {
    * des données.
    * @param {Object} httpRequest - requête http
    */
-  async function putUser (httpRequest) {
-    auth.authenticate (httpRequest);
+  async function putUser(httpRequest) {
+    auth.authenticate(httpRequest);
     const userInfo = httpRequest.body;
     let user;
     try {
-      user = buildUser (userInfo);
+      user = buildUser(userInfo);
     } catch (e) {
-      return httpErrors.invalidDataError (e);
+      return httpErrors.invalidDataError(e);
     }
     try {
-      const result = usersDao.update (httpRequest.userId, user);
-      return httpResponses.ok (result);
+      const result = usersDao.update(httpRequest.userId, user);
+      return httpResponses.ok(result);
     } catch (e) {
-      return httpErrors.serverError ();
+      return httpErrors.serverError();
     }
   }
 
@@ -83,9 +83,9 @@ export default usersDao => {
    * Validations : Connexion.
    * @param {Object} httpRequest - requête http
    */
-  async function deleteUser (httpRequest) {
-    auth.authenticate (httpRequest);
-    const result = usersDao.remove (httpRequest.userId);
-    return httpResponses.ok (result);
+  async function deleteUser(httpRequest) {
+    auth.authenticate(httpRequest);
+    const result = usersDao.remove(httpRequest.userId);
+    return httpResponses.ok(result);
   }
 };

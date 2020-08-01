@@ -1,13 +1,13 @@
-import {authValidationError} from './http_errors';
+import { authValidationError } from './http_errors';
 
-export const authenticate = httpRequest => {
+export const authenticate = (httpRequest) => {
   try {
     // todo
   } catch (e) {
-    return authValidationError ();
+    return authValidationError();
   }
 };
 
-export const signin = httpRequest => {
-    // todo
-}
+export const signin = (httpRequest) => {
+  // todo
+};
