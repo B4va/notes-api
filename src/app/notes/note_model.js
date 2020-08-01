@@ -1,21 +1,26 @@
 import DataValidationError from '../../helpers/data_validation_error';
 
 export default (noteInfo) => {
-  const note = validate(noteInfo);
-  return normalize(noteInfo);
-  
-  function validate({ title, content, color } = {}) {
+  const FIELDS = {
+    title: '',
+    content: '',
+    colors: ['gray', 'red', 'blue', 'green', 'yellow', 'purple', 'orange'],
+  };
+
+  const note = validate(noteInfo, FIELDS);
+  return normalize(noteInfo, FIELDS);
+
+  function validate({ title, content, color } = {}, FIELDS) {
     const errors = [];
-    const validColor = validateColor(color, errors);
+    const validColor = validateColor(color, errors, FIELDS.colors);
     if (!validColor) throw new DataValidationError(errors);
     return { title, content, color };
   }
-  
-  function validateColor(color, errors) {
+
+  function validateColor(color, errors, colors) {
     // Valeurs acceptés
-    const COLORS = ['gray', 'red', 'blue', 'green', 'yellow', 'purple', 'orange'];
     if (color) {
-      if (!COLORS.includes(color)) {
+      if (!colors.includes(color)) {
         errors.push('La couleur renseignée est invalide.');
         return false;
       }
@@ -23,11 +28,11 @@ export default (noteInfo) => {
     return true;
   }
 
-  function normalize({ title, content, color }) {
+  function normalize({ title, content, color }, FIELDS) {
     return {
-      title: title ? title : '',
-      content: content ? content : '',
-      color: color ? color : COLORS[0],
+      title: title ? title : FIELDS.title,
+      content: content ? content : FIELDS.content,
+      color: color ? color : FIELDS.colors[0],
     };
   }
 };

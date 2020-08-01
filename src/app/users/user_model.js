@@ -1,6 +1,11 @@
 import DataValidationError from '../../helpers/data_validation_error';
 
 export default (userInfo) => {
+  const FIELDS = {
+    email,
+    password,
+  };
+
   const user = validate(userInfo);
   return normalize(userInfo);
 
@@ -26,6 +31,11 @@ export default (userInfo) => {
     return true;
   }
 
+  function isValidEmail(email) {
+    const valid = new RegExp(/^[^@\s]+@[^@\s]+\.[^@\s]+$/);
+    return valid.test(email);
+  }
+
   function validatePassword(password, errors) {
     // Présence
     if (!password) {
@@ -45,10 +55,5 @@ export default (userInfo) => {
       email: email,
       password: password,
     };
-  }
-
-  function isValidEmail(email) {
-    const valid = new RegExp(/^[^@\s]+@[^@\s]+\.[^@\s]+$/);
-    return valid.test(email);
   }
 };
