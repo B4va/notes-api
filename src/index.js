@@ -1,5 +1,5 @@
 import express from 'express';
-import buildDatabase from './db';
+import buildDatabase from './app/core/db';
 import bodyParser from 'body-parser';
 import routes from './routes';
 import packageInfos from '../package.json';

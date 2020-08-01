@@ -1,4 +1,4 @@
-import adaptRequest from '../helpers/request_adapter';
+import adaptRequest from './request_adapter';
 
 export default (control) => (req, res) => {
   const httpRequest = adaptRequest(req);

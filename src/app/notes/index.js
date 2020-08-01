@@ -1,6 +1,6 @@
 import buildNotesDao from './notes_dao';
 import buildNotesController from './notes_controller';
-import buildNotesHandler from '../../helpers/handler_builder';
+import buildNotesHandler from '../core/helpers/handler_builder';
 
 export default (database) => {
   const notesDao = buildNotesDao(database);

@@ -1,4 +1,4 @@
-import DataValidationError from '../../helpers/data_validation_error';
+import DataValidationError from '../core/helpers/data_validation_error';
 
 export default (noteInfo) => {
   const FIELDS = {
