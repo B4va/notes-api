@@ -1,6 +1,6 @@
 import * as httpErrors from '../../helpers/http_errors';
 import * as httpResponses from '../../helpers/http_responses';
-import * as auth from '../auth';
+import * as auth from '../core/auth';
 import buildUser from './user_model';
 
 export default (usersDao) => {
