@@ -3,6 +3,7 @@ import * as httpResponses from '../core/helpers/http_responses';
 import * as auth from '../core/auth';
 import buildUser from './user_model';
 import adaptAuth from '../core/helpers/auth_adapter';
+import UniqueViolationError from '../core/helpers/unique_violation_error';
 
 // TODO : reprendre avec système d'authentification
 // ! à tester
@@ -42,12 +43,17 @@ export default (usersDao, authManager) => {
   async function getUser(httpRequest) {
     const token = adaptAuth(httpRequest);
     try {
-      const userId = await authManager.verifyToken(token);
+      const userToken = await authManager.verifyToken(token);
+      const result = await usersDao.read(userToken.id);
+      if (result) {
+        return httpResponses.ok(result);
+      } else {
+        return httpErrors.authValidationError();
+      }
     } catch (e) {
+      console.log(e);
       return httpErrors.authValidationError();
     }
-    const result = await usersDao.read(userId);
-    return httpResponses.ok(result);
   }
 
   /**
@@ -59,15 +65,21 @@ export default (usersDao, authManager) => {
     const userInfo = httpRequest.body;
     let user;
     try {
-      user = buildUser(userInfo);
+      user = await buildUser(userInfo);
     } catch (e) {
+      console.log(e);
       return httpErrors.invalidDataError(e);
     }
     try {
       const result = await usersDao.create(user);
       return httpResponses.created(result.ops);
     } catch (e) {
-      return httpErrors.serverError();
+      if (e instanceof UniqueViolationError) {
+        console.log(e.message);
+        return httpErrors.uniqueViolationError(e);
+      } else {
+        return httpErrors.serverError();
+      }
     }
   }
 
@@ -79,22 +91,22 @@ export default (usersDao, authManager) => {
   async function putUser(httpRequest) {
     const token = adaptAuth(httpRequest);
     try {
-      const userId = await authManager.verifyToken(token);
+      const userToken = await authManager.verifyToken(token);
+      const userInfo = httpRequest.body;
+      let user;
+      try {
+        user = await buildUser(userInfo);
+      } catch (e) {
+        return httpErrors.invalidDataError(e);
+      }
+      try {
+        await usersDao.update(userToken.id, user);
+        return httpResponses.noContent('Utilisateur modifié.');
+      } catch (e) {
+        return httpErrors.serverError();
+      }
     } catch (e) {
       return httpErrors.authValidationError();
-    }
-    const userInfo = httpRequest.body;
-    let user;
-    try {
-      user = buildUser(userInfo);
-    } catch (e) {
-      return httpErrors.invalidDataError(e);
-    }
-    try {
-      const result = usersDao.update(userId, user);
-      return httpResponses.noContent(result);
-    } catch (e) {
-      return httpErrors.serverError();
     }
   }
 
@@ -106,13 +118,12 @@ export default (usersDao, authManager) => {
   async function deleteUser(httpRequest) {
     const token = adaptAuth(httpRequest);
     try {
-      const userId = await authManager.verifyToken(token);
+      const userToken = await authManager.verifyToken(token);
+      const result = usersDao.remove(userToken.id);
+      return httpResponses.noContent('Utilisateur supprimé.');
     } catch (e) {
       return httpErrors.authValidationError();
     }
-    auth.authenticate(httpRequest);
-    const result = usersDao.remove(userId);
-    return httpResponses.noContent(result);
   }
 
   /**
@@ -122,15 +133,15 @@ export default (usersDao, authManager) => {
    */
   async function loginUser(httpRequest) {
     try {
-      const userId = authManager.authenticateUser(
+      const userId = await authManager.authenticateUser(
         httpRequest.body.email,
         httpRequest.body.password,
       );
+      const result = await authManager.generateToken(userId);
+      return httpResponses.ok(result);
     } catch (e) {
       return httpErrors.authValidationError();
     }
-    const result = authManager.generateToken(userId);
-    return httpResponses.ok(result);
   }
 
   /**

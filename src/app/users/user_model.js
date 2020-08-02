@@ -1,23 +1,19 @@
 import DataValidationError from '../core/helpers/data_validation_error';
+import usersDao from './users_dao';
 
-export default (userInfo) => {
-  const FIELDS = {
-    email,
-    password,
-  };
-
-  const user = validate(userInfo);
+export default async (userInfo) => {
+  const user = await validate(userInfo);
   return normalize(userInfo);
 
-  function validate({ email, password } = {}) {
+  async function validate({ email, password } = {}) {
     const errors = [];
-    const validEmail = validateEmail(email, errors);
+    const validEmail = await validateEmail(email, errors);
     const validPassword = validatePassword(password, errors);
     if (!validEmail || !validPassword) throw new DataValidationError(errors);
     return { email, password };
   }
 
-  function validateEmail(email, errors) {
+  async function validateEmail(email, errors) {
     // Présence
     if (!email) {
       errors.push('Une adresse email doit être renseignée.');

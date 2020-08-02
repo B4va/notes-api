@@ -19,6 +19,9 @@ export const dataError = () =>
 export const invalidDataError = (e) =>
   buildHttpError(400, 'Les données renseignées sont invalides.', e.details);
 
+  export const uniqueViolationError = (e) =>
+  buildHttpError(400, 'Les données renseignées sont invalides.', e.message);
+
 export const authValidationError = () =>
   buildHttpError(401, 'Accès non autorisé.');
 

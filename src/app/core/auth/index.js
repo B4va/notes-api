@@ -16,7 +16,7 @@ async function buildAuthManager(database) {
   });
 
   async function generateToken(id) {
-    const token = await jwt.sign(id, process.env.TOKEN_SECRET);
+    const token = await jwt.sign({id}, process.env.TOKEN_SECRET);
     return { status: 'Token généré.', token: token };
   }
 
@@ -36,7 +36,7 @@ async function buildAuthManager(database) {
       .collection('users')
       .findOne({ email: email, password: password });
     if (user) {
-      return userId;
+      return user._id;
     } else {
       throw new Error();
     }

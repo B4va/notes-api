@@ -5,5 +5,5 @@ export default (req = {}) =>
     pathParams: req.params,
     queryParams: req.query,
     body: req.body,
-    user: {},
+    headers: req.headers,
   });

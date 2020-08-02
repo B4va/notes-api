@@ -14,4 +14,4 @@ export const ok = (result) => buildHttpResponse(200, result);
 
 export const created = (result) => buildHttpResponse(201, result);
 
-export const noContent = (result) => buildHttpResponse(204, result);
+export const noContent = (message) => buildHttpResponse(200, message);
