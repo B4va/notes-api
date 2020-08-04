@@ -1,3 +1,6 @@
+/**
+ * Erreur d'unicité.
+ */
 export default class UniqueViolationError extends Error {
   constructor(message, ...params) {
     super(...params);

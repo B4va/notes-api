@@ -1,5 +1,10 @@
 import adaptRequest from './request_adapter';
 
+/**
+ * Constructeur du traitement d'une requête http.
+ * @param {Function} control controleur
+ * @returns {Function} prise en charge de la requête
+ */
 export default (control) => (req, res) => {
   const httpRequest = adaptRequest(req);
   control(httpRequest)

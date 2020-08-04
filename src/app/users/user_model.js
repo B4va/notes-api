@@ -1,16 +1,22 @@
 import DataValidationError from '../core/helpers/data_validation_error';
 import usersDao from './users_dao';
 
+/**
+ * Modélisation et validation d'un utilisateur.
+ * @param {Object} userInfo données
+ * @returns {Object} utilisateur validé et normalisé
+ */
 export default async (userInfo) => {
+  // TODO : doc
   const user = await validate(userInfo);
   return normalize(userInfo);
 
-  async function validate({ email, password } = {}) {
+  async function validate({ email, password, trace } = {}) {
     const errors = [];
     const validEmail = await validateEmail(email, errors);
     const validPassword = validatePassword(password, errors);
     if (!validEmail || !validPassword) throw new DataValidationError(errors);
-    return { email, password };
+    return { email, password, trace };
   }
 
   async function validateEmail(email, errors) {
@@ -46,10 +52,11 @@ export default async (userInfo) => {
     return true;
   }
 
-  function normalize({ email, password }) {
+  function normalize({ email, password, trace }) {
     return {
       email: email,
       password: password,
+      trace: trace,
     };
   }
 };

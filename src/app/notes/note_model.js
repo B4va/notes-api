@@ -1,9 +1,13 @@
 import DataValidationError from '../core/helpers/data_validation_error';
 
+/**
+ * Modélisation et validation d'une note.
+ * @param {Object} noteInfo données
+ * @returns {Object} note validée et normalisée
+ */
 export default (noteInfo) => {
-  const FIELDS = {
-    title: '',
-    content: '',
+  // TODO : doc
+  const PRESETS = {
     colors: ['gray', 'red', 'blue', 'green', 'yellow', 'purple', 'orange'],
   };
 
@@ -12,7 +16,7 @@ export default (noteInfo) => {
 
   function validate({ title, content, color } = {}, FIELDS) {
     const errors = [];
-    const validColor = validateColor(color, errors, FIELDS.colors);
+    const validColor = validateColor(color, errors, PRESETS.colors);
     if (!validColor) throw new DataValidationError(errors);
     return { title, content, color };
   }
@@ -30,8 +34,8 @@ export default (noteInfo) => {
 
   function normalize({ title, content, color }, FIELDS) {
     return {
-      title: title ? title : FIELDS.title,
-      content: content ? content : FIELDS.content,
+      title: title,
+      content: content,
       color: color ? color : FIELDS.colors[0],
     };
   }

@@ -1,6 +1,12 @@
 import mongo from 'mongodb';
 
+/**
+ * Constructeur de la DAO propre aux notes.
+ * @param {Object} database base de données
+ * @returns {Object} méthodes DAO notes
+ */
 export default (database) => {
+  // TODO : doc
   return Object.freeze({
     create,
     read,
@@ -31,7 +37,7 @@ export default (database) => {
     const id = new mongo.ObjectID(noteId);
     return await db
       .collection('notes')
-      .findOneAndReplace({ _id: id }, noteInfo);
+      .updateOne({ _id: id }, { $set: noteInfo });
   }
 
   async function remove(noteId) {

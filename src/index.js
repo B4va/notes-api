@@ -5,6 +5,9 @@ import bodyParser from 'body-parser';
 import routes from './routes';
 import packageInfos from '../package.json';
 
+/**
+ * Lancement de l'application.
+ */
 async function run() {
   const appName = packageInfos.name;
   const app = express();
@@ -21,5 +24,7 @@ async function run() {
     console.log(`${appName} : Impossible de lancer le serveur.`, err);
   }
 }
+
+/***/
 
 run();

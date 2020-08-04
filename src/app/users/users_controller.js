@@ -5,12 +5,16 @@ import buildUser from './user_model';
 import adaptAuth from '../core/helpers/auth_adapter';
 import UniqueViolationError from '../core/helpers/unique_violation_error';
 
-// TODO : reprendre avec système d'authentification
-// ! à tester
-
+/**
+ * Constructeur du controleur des utilisateurs.
+ * @param {Object} notesDao DAO propre aux utilisateurs
+ * @param {Object} authManager gestionnaire d'authentification
+ * @returns {Function} controleur
+ */
 export default (usersDao, authManager) => {
+  // TODO : doc returns
   /**
-   * Méthodes.
+   * Accès http.
    */
   return async (httpRequest) => {
     switch (httpRequest.method) {
@@ -24,7 +28,9 @@ export default (usersDao, authManager) => {
         return deleteUser(httpRequest);
       case 'PATCH':
         if (httpRequest.queryParams.auth === 'revoke') {
-          return revokeUser(httpRequest);
+          return revokeOneAccess(httpRequest);
+        } else if (httpRequest.queryParams.auth === 'revoke-all') {
+          return revokeAllAccess(httpRequest);
         } else if (httpRequest.queryParams.auth === 'login') {
           return loginUser(httpRequest);
         } else {
@@ -43,8 +49,8 @@ export default (usersDao, authManager) => {
   async function getUser(httpRequest) {
     const token = adaptAuth(httpRequest);
     try {
-      const userToken = await authManager.verifyToken(token);
-      const result = await usersDao.read(userToken.id);
+      const user = await authManager.verifyUser(token);
+      const result = await usersDao.read(user.id);
       if (result) {
         return httpResponses.ok(result);
       } else {
@@ -91,7 +97,7 @@ export default (usersDao, authManager) => {
   async function putUser(httpRequest) {
     const token = adaptAuth(httpRequest);
     try {
-      const userToken = await authManager.verifyToken(token);
+      const user = await authManager.verifyUser(token);
       const userInfo = httpRequest.body;
       let user;
       try {
@@ -100,7 +106,7 @@ export default (usersDao, authManager) => {
         return httpErrors.invalidDataError(e);
       }
       try {
-        await usersDao.update(userToken.id, user);
+        await usersDao.update(user.id, user);
         return httpResponses.noContent('Utilisateur modifié.');
       } catch (e) {
         return httpErrors.serverError();
@@ -118,8 +124,8 @@ export default (usersDao, authManager) => {
   async function deleteUser(httpRequest) {
     const token = adaptAuth(httpRequest);
     try {
-      const userToken = await authManager.verifyToken(token);
-      const result = usersDao.remove(userToken.id);
+      const user = await authManager.verifyUser(token);
+      const result = usersDao.remove(user.id);
       return httpResponses.noContent('Utilisateur supprimé.');
     } catch (e) {
       return httpErrors.authValidationError();
@@ -133,11 +139,10 @@ export default (usersDao, authManager) => {
    */
   async function loginUser(httpRequest) {
     try {
-      const userId = await authManager.authenticateUser(
+      const result = await authManager.authenticateUser(
         httpRequest.body.email,
         httpRequest.body.password,
       );
-      const result = await authManager.generateToken(userId);
       return httpResponses.ok(result);
     } catch (e) {
       return httpErrors.authValidationError();
@@ -149,12 +154,27 @@ export default (usersDao, authManager) => {
    * Validation : Connexion.
    * @param {Object} httpRequest - requête http
    */
-  async function revokeUser(httpRequest) {
+  async function revokeOneAccess(httpRequest) {
     const token = adaptAuth(httpRequest);
     try {
       await authManager.verifyToken(token);
       const result = await authManager.revokeToken(token);
       return httpResponses.ok(result);
+    } catch (e) {
+      return httpErrors.authValidationError();
+    }
+  }
+
+  /**
+   * Déconnecte un utilisateur de tous ses appareils.
+   * Validation : Connexion.
+   * @param {Object} httpRequest - requête http
+   */
+  async function revokeAll(httpRequest) {
+    const token = adaptAuth(httpRequest);
+    try {
+      const user = await authManager.verifyToken(token);
+      const result = await authManager.revokeAll(user.id);
     } catch (e) {
       return httpErrors.authValidationError();
     }

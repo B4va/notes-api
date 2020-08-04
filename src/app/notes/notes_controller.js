@@ -2,11 +2,16 @@ import * as httpErrors from '../core/helpers/http_errors';
 import * as httpResponses from '../core/helpers/http_responses';
 import buildNote from './note_model';
 
-// TODO : reprendre avec système d'authentification
-
+/**
+ * Constructeur du controleur des notes.
+ * @param {Object} notesDao DAO propre aux notes
+ * @param {Object} authManager gestionnaire d'authentification
+ * @returns {Function} controleur
+ */
 export default (notesDao, authManager) => {
+  // TODO : doc returns
   /**
-   * Méthodes.
+   * Accès http.
    */
   return async (httpRequest) => {
     switch (httpRequest.method) {

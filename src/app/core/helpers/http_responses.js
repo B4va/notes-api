@@ -1,5 +1,10 @@
 import buildDatabase from '../db';
 
+/**
+ * Construit une réponse http valide.
+ * @param {Number} statusCode code de la réponse
+ * @param {Object} result données renvoyées
+ */
 function buildHttpResponse(statusCode, result) {
   return {
     headers: {

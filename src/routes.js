@@ -3,6 +3,12 @@ import buildNotesHandler from './app/notes';
 
 const root = '/api/v0';
 
+/**
+ * Constructeur des routes de l'application.
+ * @param {Object} app application express
+ * @param {Object} database base de données
+ * @param {Object} authManager gestionnaire d'authentification
+ */
 export default (app, database, authManager) => {
   const usersHandler = buildUsersHandler(database, authManager);
   const notesHandler = buildNotesHandler(database, authManager);

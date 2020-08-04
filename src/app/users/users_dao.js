@@ -1,9 +1,15 @@
 import mongo from 'mongodb';
 import UniqueViolationError from '../core/helpers/unique_violation_error';
 
+/**
+ * Constructeur de la DAO propre aux utilisateurs.
+ * @param {Object} database base de données
+ * @returns {Object} méthodes DAO utilisateurs
+ */
 export default (database) => {
   // TODO : Revoir la gestion de l'unicité
   // ! email unique
+  // TODO : doc
 
   return Object.freeze({
     create,

@@ -1,3 +1,9 @@
+/**
+ * Construit une erreur http.
+ * @param {Number} statusCode code de l'erreur
+ * @param {*} errorMessage message d'erreur
+ * @param {*} details détails de l'erreur
+ */
 function buildHttpError(statusCode, errorMessage, details = null) {
   return {
     headers: {
@@ -19,7 +25,7 @@ export const dataError = () =>
 export const invalidDataError = (e) =>
   buildHttpError(400, 'Les données renseignées sont invalides.', e.details);
 
-  export const uniqueViolationError = (e) =>
+export const uniqueViolationError = (e) =>
   buildHttpError(400, 'Les données renseignées sont invalides.', e.message);
 
 export const authValidationError = () =>
