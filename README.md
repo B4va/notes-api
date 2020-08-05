@@ -40,3 +40,21 @@ Les variables d'environnement doivent être configurées à la racine de l'appli
 **Développement** :
 - **Jest** : Tests
 - **Nodemon** : Lancement du serveur node
+
+## Process
+
+### Architecture
+
+4/3 : modèle, controller, dao
+
+### DAO
+
+Validations, normalisation, NoSQL
+
+### Serveur / Routing
+
+Express, indépendance par rapport au framework
+
+### Authentification
+
+JWT, Bcrypt, trace utilisateur
