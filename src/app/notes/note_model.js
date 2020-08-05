@@ -32,9 +32,9 @@ export default (noteInfo) => {
 
   /**
    * Valide la couleur de la note.
-   * @param {*} color couleur saisie
-   * @param {*} errors liste d'erreurs
-   * @param {*} colors couleurs par défaut
+   * @param {String} color couleur saisie
+   * @param {Array} errors liste d'erreurs
+   * @param {Object} colors couleurs par défaut
    * @return {boolean} true si la couleur est valide
    */
   function validateColor(color, errors, colors) {
