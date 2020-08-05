@@ -22,8 +22,8 @@ async function buildAuthManager(database) {
 
   /**
    * Authentifie un utilisateur.
-   * @param {*} email email utilisateur
-   * @param {*} password mot de passe utilisateur
+   * @param {String} email email utilisateur
+   * @param {String} password mot de passe utilisateur
    * @returns {String} token de connexion
    */
   async function authenticateUser(email, password) {
@@ -46,8 +46,7 @@ async function buildAuthManager(database) {
    * @returns {String} id utilisateur
    */
   async function verifyUser(token) {
-    const revokedToken = await authDao.checkRevokedToken(token);
-    if (revokedToken) {
+    if (await authDao.isRevokedToken(token)) {
       throw new Error();
     }
     const trace = await jwt.verify(token, process.env.TOKEN_SECRET);

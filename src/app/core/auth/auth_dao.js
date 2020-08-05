@@ -8,7 +8,7 @@ import uuid from 'uuid';
  */
 export default (database) => {
   return Object.freeze({
-    checkToken,
+    isRevokedToken,
     checkUser,
     findTrace,
     addToken,
@@ -16,18 +16,18 @@ export default (database) => {
   });
 
   /**
-   * Recherche un token parmi les token révoqués.
+   * Détermine si un token appartient à la liste des token révoqués.
    * @param {String} token token de connexion 
-   * @returns {String} token ou null si le token n'a pas été révoqué
+   * @returns {boolean} true si le token est révoqué
    */
-  async function checkRevokedToken(token) {
+  async function isRevokedToken(token) {
     const db = await database;
-    return await db.collection('token').findOne({ token: token });
+    const token = await db.collection('token').findOne({ token: token });
+    return !!token;
   }
 
   /**
-   * Recherche un utilisateur correspondant aux identifiants
-   * de connexion.
+   * Recherche un utilisateur correspondant aux identifiants de connexion.
    * @param {String} email email utilisateur
    * @param {String} password mot de passe utilisateur
    * @returns {Object} utilisateur ou null si identifiants inconnus

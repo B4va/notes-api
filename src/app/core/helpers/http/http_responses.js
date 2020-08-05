@@ -1,4 +1,4 @@
-import buildDatabase from '../db';
+import buildDatabase from '../../db';
 
 /**
  * Construit une réponse http valide.
@@ -15,8 +15,23 @@ function buildHttpResponse(statusCode, result) {
   };
 }
 
+/**
+ * Retour de données.
+ * @param {Object} result données à renvoyer
+ * @returns {Object} réponse http
+ */
 export const ok = (result) => buildHttpResponse(200, result);
 
+/**
+ * Retour de données après création d'un objet.
+ * @param {Object} result objet à renvoyer
+ * @returns {Object} réponse http
+ */
 export const created = (result) => buildHttpResponse(201, result);
 
+/**
+ * Retour sans données.
+ * @param {Object} message message à renvoyer
+ * @returns {Object} réponse http
+ */
 export const noContent = (message) => buildHttpResponse(200, message);

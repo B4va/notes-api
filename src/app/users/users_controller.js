@@ -12,7 +12,6 @@ import UniqueViolationError from '../core/helpers/unique_violation_error';
  * @returns {Function} controleur
  */
 export default (usersDao, authManager) => {
-  // TODO : doc returns
   /**
    * Accès http.
    */
@@ -45,6 +44,7 @@ export default (usersDao, authManager) => {
    * Renvoie les informations de l'utilisateur connecté.
    * Validations : Connexion.
    * @param {Object} httpRequest - requête http
+   * @returns {Object} réponse http
    */
   async function getUser(httpRequest) {
     const token = adaptAuth(httpRequest);
@@ -66,6 +66,7 @@ export default (usersDao, authManager) => {
    * Ajoute un utilisateur et renvoie les informations enregistrées.
    * Validations : Données.
    * @param {Object} httpRequest - requête http
+   * @returns {Object} réponse http
    */
   async function postUser(httpRequest) {
     const userInfo = httpRequest.body;
@@ -93,6 +94,7 @@ export default (usersDao, authManager) => {
    * Modifie les données de l'utilisateur connecté.
    * Validations : Connexion, données.
    * @param {Object} httpRequest - requête http
+   * @returns {Object} réponse http
    */
   async function putUser(httpRequest) {
     const token = adaptAuth(httpRequest);
@@ -120,6 +122,7 @@ export default (usersDao, authManager) => {
    * Supprime l'utilisateur connecté.
    * Validations : Connexion.
    * @param {Object} httpRequest - requête http
+   * @returns {Object} réponse http
    */
   async function deleteUser(httpRequest) {
     const token = adaptAuth(httpRequest);
@@ -136,6 +139,7 @@ export default (usersDao, authManager) => {
    * Connecte un utilisateur.
    * Validations : Authentification.
    * @param {Object} httpRequest - requête http
+   * @returns {Object} réponse http
    */
   async function loginUser(httpRequest) {
     try {
@@ -153,6 +157,7 @@ export default (usersDao, authManager) => {
    * Déconnecte un utilisateur.
    * Validation : Connexion.
    * @param {Object} httpRequest - requête http
+   * @returns {Object} réponse http
    */
   async function revokeOneAccess(httpRequest) {
     const token = adaptAuth(httpRequest);
@@ -169,6 +174,7 @@ export default (usersDao, authManager) => {
    * Déconnecte un utilisateur de tous ses appareils.
    * Validation : Connexion.
    * @param {Object} httpRequest - requête http
+   * @returns {Object} réponse http
    */
   async function revokeAll(httpRequest) {
     const token = adaptAuth(httpRequest);

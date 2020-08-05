@@ -9,7 +9,6 @@ import buildNote from './note_model';
  * @returns {Function} controleur
  */
 export default (notesDao, authManager) => {
-  // TODO : doc returns
   /**
    * Accès http.
    */
@@ -41,6 +40,7 @@ export default (notesDao, authManager) => {
    * à l'utilisateur connecté.
    * Validations : Connexion, appartenance.
    * @param {Object} httpRequest - requête http
+   * @returns {Object} réponse http
    */
   async function getNote(httpRequest) {
     const result = await notesDao.read(httpRequest.pathParams.id);
@@ -55,6 +55,7 @@ export default (notesDao, authManager) => {
    * à l'utilisateur connecté.
    * Validations : Connexion, appartenance.
    * @param {Object} httpRequest - requête http
+   * @returns {Object} réponse http
    */
   async function getNotes(httpRequest) {
     const result = await notesDao.readAll();
@@ -67,6 +68,7 @@ export default (notesDao, authManager) => {
    * Validations : Connexion, appartenance, données, format des données, validité
    * des données.
    * @param {Object} httpRequest - requête http
+   * @returns {Object} réponse http
    */
   async function postNote(httpRequest) {
     const noteInfo = httpRequest.body;
@@ -90,6 +92,7 @@ export default (notesDao, authManager) => {
    * Validations : Connexion, appartenance, données, format des données, validité
    * des données.
    * @param {Object} httpRequest - requête http
+   * @returns {Object} réponse http
    */
   async function putNote(httpRequest) {
     const noteInfo = httpRequest.body;
@@ -111,6 +114,7 @@ export default (notesDao, authManager) => {
    * Supprime une note appartenant à l'utilisateur connecté.
    * Validations : Connexion, appartenance.
    * @param {Object} httpRequest - requête http
+   * @returns {Object} réponse http
    */
   async function deleteNote(httpRequest) {
     const note = await notesDao.read(httpRequest.pathParams.id);
@@ -125,6 +129,7 @@ export default (notesDao, authManager) => {
    * Supprime toutes les notes appartenant à l'utilisateur connecté.
    * Validations : Connexion, appartenance.
    * @param {Object} httpRequest - requête http
+   * @returns {Object} réponse http
    */
   async function deleteNotes(httpRequest) {
     const result = notesDao.removeAll();

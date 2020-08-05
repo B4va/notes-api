@@ -7,10 +7,14 @@ import usersDao from './users_dao';
  * @returns {Object} utilisateur validé et normalisé
  */
 export default async (userInfo) => {
-  // TODO : doc
   const user = await validate(userInfo);
   return normalize(userInfo);
 
+  /**
+   * Valide les attributs d'un utilisateur.
+   * @param {Object} param0 utilisateur à valider (dstrc)
+   * @returns {Object} utilisateur validé
+   */
   async function validate({ email, password, trace } = {}) {
     const errors = [];
     const validEmail = await validateEmail(email, errors);
@@ -19,6 +23,12 @@ export default async (userInfo) => {
     return { email, password, trace };
   }
 
+  /**
+   * Valide l'email de l'utilisateur.
+   * @param {String} email email saisi
+   * @param {Array} errors liste d'erreurs
+   * @returns {boolean} true si l'email est valide
+   */
   async function validateEmail(email, errors) {
     // Présence
     if (!email) {
@@ -26,18 +36,29 @@ export default async (userInfo) => {
       return false;
     }
     // Format
-    if (!isValidEmail(email)) {
+    if (!isValidEmailFormat(email)) {
       errors.push("L'adresse email renseignée est invalide.");
       return false;
     }
     return true;
   }
 
-  function isValidEmail(email) {
+  /**
+   * Valide le format de l'email.
+   * @param {String} email email à valider
+   * @returns {boolean} true si le format de l'email est valide
+   */
+  function isValidEmailFormat(email) {
     const valid = new RegExp(/^[^@\s]+@[^@\s]+\.[^@\s]+$/);
     return valid.test(email);
   }
 
+  /**
+   * Valide le mot de passe de l'utilisateur.
+   * @param {String} password mot de passe saisi
+   * @param {Array} errors liste d'erreurs
+   * @returns {boolean} true si le mot de passe est valide
+   */
   function validatePassword(password, errors) {
     // Présence
     if (!password) {
@@ -52,6 +73,11 @@ export default async (userInfo) => {
     return true;
   }
 
+  /**
+   * Normalise les attributs de l'utilisateur.
+   * @param {Object} param0 utilisateur à normaliser (destrc)
+   * @returns {Object} utilisateur normalisé
+   */
   function normalize({ email, password, trace }) {
     return {
       email: email,

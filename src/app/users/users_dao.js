@@ -9,7 +9,6 @@ import UniqueViolationError from '../core/helpers/unique_violation_error';
 export default (database) => {
   // TODO : Revoir la gestion de l'unicité
   // ! email unique
-  // TODO : doc
 
   return Object.freeze({
     create,
@@ -18,6 +17,11 @@ export default (database) => {
     remove,
   });
 
+  /**
+   * Crée un utilisateur.
+   * @param {Object} user informations utilisateur
+   * @returns {Object} utilisateur
+   */
   async function create(user) {
     const db = await database;
     if (!isEmailUnique(user.email, db))
@@ -25,12 +29,28 @@ export default (database) => {
     return await db.collection('users').insertOne(user);
   }
 
+  async function isEmailUnique(email, db) {
+    const check = await db.collection('users').findOne({ email: email });
+    return !check;
+  }
+
+  /**
+   * Accède à un utilisateur.
+   * @param {String} userId id utilisateur
+   * @returns {Object} utilisateur
+   */
   async function read(userId) {
     const db = await database;
     const id = new mongo.ObjectID(userId);
     return await db.collection('users').findOne({ _id: id });
   }
 
+  /**
+   * Met à jour un utilisateur.
+   * @param {String} userId id utilisateur
+   * @param {Object} userInfo informations utilisateur
+   * @returns {Object} utilisateur
+   */
   async function update(userId, userInfo) {
     const db = await database;
     if (!isEmailUnique(userInfo.email, db))
@@ -41,14 +61,14 @@ export default (database) => {
       .updateOne({ _id: id }, { $set: userInfo });
   }
 
+  /**
+   * Supprime un utilisateur.
+   * @param {String} userId id utilisateur
+   * @returns {Object} utilisateur
+   */
   async function remove(userId) {
     const db = await database;
     const id = new mongo.ObjectID(userId);
     return await db.collection('users').deleteOne({ _id: id });
-  }
-
-  async function isEmailUnique(email, db) {
-    const check = await db.collection('users').findOne({ email: email });
-    return !check;
   }
 };

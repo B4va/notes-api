@@ -1,4 +1,4 @@
-import adaptRequest from './request_adapter';
+import adaptRequest from '../adapters/request_adapter';
 
 /**
  * Constructeur du traitement d'une requête http.
