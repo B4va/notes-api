@@ -21,15 +21,16 @@ export default (database) => {
    * Crée un utilisateur.
    * @param {Object} user informations utilisateur
    * @returns {Object} utilisateur
+   * @throws {UniqueViolationError} si l'email saisi est déjà utilisé
    */
   async function create(user) {
     const db = await database;
-    if (!isEmailUnique(user.email, db))
+    if (!_isEmailUnique(user.email, db))
       throw new UniqueViolationError("L'adresse mail est déjà utilisée.");
     return await db.collection('users').insertOne(user);
   }
 
-  async function isEmailUnique(email, db) {
+  async function _isEmailUnique(email, db) {
     const check = await db.collection('users').findOne({ email: email });
     return !check;
   }

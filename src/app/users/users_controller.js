@@ -4,6 +4,7 @@ import * as auth from '../core/auth';
 import buildUser from './user_model';
 import adaptAuth from '../core/helpers/auth_adapter';
 import UniqueViolationError from '../core/helpers/unique_violation_error';
+import encrypter from '../core/helpers/process/encrypter';
 
 /**
  * Constructeur du controleur des utilisateurs.
@@ -73,6 +74,7 @@ export default (usersDao, authManager) => {
     let user;
     try {
       user = await buildUser(userInfo);
+      user.password = encrypter.hash(user.password);
     } catch (e) {
       console.log(e);
       return httpErrors.invalidDataError(e);
@@ -143,10 +145,7 @@ export default (usersDao, authManager) => {
    */
   async function loginUser(httpRequest) {
     try {
-      const result = await authManager.authenticateUser(
-        httpRequest.body.email,
-        httpRequest.body.password,
-      );
+      const user = await authManager.authenticateUser(httpRequest.body.email);
       return httpResponses.ok(result);
     } catch (e) {
       return httpErrors.authValidationError();

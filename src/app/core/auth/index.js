@@ -3,6 +3,7 @@
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 import buildTokenDao from './auth_dao';
+import encrypter from '../helpers/process/encrypter';
 
 export default buildAuthManager;
 
@@ -25,11 +26,15 @@ async function buildAuthManager(database) {
    * @param {String} email email utilisateur
    * @param {String} password mot de passe utilisateur
    * @returns {String} token de connexion
+   * @throws {Error} si le mot de passe et/ou l'email est invalide
    */
-  async function authenticateUser(email, password) {
-    const user = authDao.checkUser(email, passaword);
-    if (user) {
-      return _generateToken(user.trace);
+  async function authenticateUser(email) {
+    const user = authDao.findUser(email);
+    if (user && encrypter.validate(user.password)) {
+      return {
+        user: user,
+        token: _generateToken(user.trace),
+      };
     } else {
       throw new Error();
     }
@@ -44,6 +49,8 @@ async function buildAuthManager(database) {
    * Vérifie la connexion d'un utilisateur.
    * @param {String} token token de connexion
    * @returns {String} id utilisateur
+   * @throws {Error} si le token utilisateur a été révoqué et/ou
+   *                 si le token ne correspond à aucun utilisateur
    */
   async function verifyUser(token) {
     if (await authDao.isRevokedToken(token)) {

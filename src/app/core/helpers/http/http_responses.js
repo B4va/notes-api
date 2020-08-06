@@ -5,7 +5,7 @@ import buildDatabase from '../../db';
  * @param {Number} statusCode code de la réponse
  * @param {Object} result données renvoyées
  */
-function buildHttpResponse(statusCode, result) {
+function _buildHttpResponse(statusCode, result) {
   return {
     headers: {
       'Content-Type': 'application/json',
@@ -20,18 +20,18 @@ function buildHttpResponse(statusCode, result) {
  * @param {Object} result données à renvoyer
  * @returns {Object} réponse http
  */
-export const ok = (result) => buildHttpResponse(200, result);
+export const ok = (result) => _buildHttpResponse(200, result);
 
 /**
  * Retour de données après création d'un objet.
  * @param {Object} result objet à renvoyer
  * @returns {Object} réponse http
  */
-export const created = (result) => buildHttpResponse(201, result);
+export const created = (result) => _buildHttpResponse(201, result);
 
 /**
  * Retour sans données.
  * @param {Object} message message à renvoyer
  * @returns {Object} réponse http
  */
-export const noContent = (message) => buildHttpResponse(200, message);
+export const noContent = (message) => _buildHttpResponse(200, message);

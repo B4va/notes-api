@@ -29,14 +29,11 @@ export default (database) => {
   /**
    * Recherche un utilisateur correspondant aux identifiants de connexion.
    * @param {String} email email utilisateur
-   * @param {String} password mot de passe utilisateur
    * @returns {Object} utilisateur ou null si identifiants inconnus
    */
-  async function checkUser(email, password) {
+  async function findUser(email) {
     const db = await database;
-    return await db
-      .collection('users')
-      .findOne({ email: email, password: password });
+    return await db.collection('users').findOne({ email: email });
   }
 
   /**

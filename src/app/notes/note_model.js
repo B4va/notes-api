@@ -14,18 +14,19 @@ export default (noteInfo) => {
     colors: ['gray', 'red', 'blue', 'green', 'yellow', 'purple', 'orange'],
   };
 
-  const note = validate(noteInfo, FIELDS);
-  return normalize(noteInfo, FIELDS);
+  const note = _validate(noteInfo, FIELDS);
+  return _normalize(noteInfo, FIELDS);
 
   /**
    * Valide les attributs de la note.
    * @param {Object} param0 note à valider (dstrc)
    * @param {Object} FIELDS valeurs par défaut
    * @returns {Object} note validée
+   * @throws {DataValidationError} si les données saisie sont invalides
    */
-  function validate({ title, content, color } = {}, FIELDS) {
+  function _validate({ title, content, color } = {}, FIELDS) {
     const errors = [];
-    const validColor = validateColor(color, errors, PRESETS.colors);
+    const validColor = _validateColor(color, errors, PRESETS.colors);
     if (!validColor) throw new DataValidationError(errors);
     return { title, content, color };
   }
@@ -37,7 +38,7 @@ export default (noteInfo) => {
    * @param {Object} colors couleurs par défaut
    * @return {boolean} true si la couleur est valide
    */
-  function validateColor(color, errors, colors) {
+  function _validateColor(color, errors, colors) {
     if (color) {
       if (!colors.includes(color)) {
         errors.push('La couleur renseignée est invalide.');
@@ -53,7 +54,7 @@ export default (noteInfo) => {
    * @param {Object} FIELDS valeurs par défaut
    * @returns {Object} note normalisée
    */
-  function normalize({ title, content, color }, FIELDS) {
+  function _normalize({ title, content, color }, FIELDS) {
     return {
       title: title,
       content: content,
