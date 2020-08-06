@@ -34,6 +34,7 @@ Les variables d'environnement doivent être configurées à la racine de l'appli
 - **Express** : Gestion des requêtes
 - **BodyParser** : Traitement des données reçues
 - **MongoDB** : Base de données
+- **Bcrypt** : Chiffrement des mots de passe
 - **UUID** : Génération d'identifiants uniques
 - **Dotenv** : Gestion des variables d'environnement
 
