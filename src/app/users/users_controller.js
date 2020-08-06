@@ -1,10 +1,10 @@
-import * as httpErrors from '../core/helpers/http_errors';
-import * as httpResponses from '../core/helpers/http_responses';
+import * as httpErrors from '../core/helpers/http/http_errors';
+import * as httpResponses from '../core/helpers/http/http_responses';
 import * as auth from '../core/auth';
 import buildUser from './user_model';
-import adaptAuth from '../core/helpers/auth_adapter';
-import UniqueViolationError from '../core/helpers/unique_violation_error';
-import encrypter from '../core/helpers/utils/encrypter';
+import adaptAuth from '../core/helpers/adapters/auth_adapter';
+import UniqueViolationError from '../core/helpers/errors/unique_violation_error';
+import { hash } from '../core/helpers/utils/encrypter';
 
 /**
  * Constructeur du controleur des utilisateurs.
@@ -74,7 +74,7 @@ export default (usersDao, authManager) => {
     let user;
     try {
       user = await buildUser(userInfo);
-      user.password = encrypter.hash(user.password);
+      hash(user.password);
     } catch (e) {
       console.log(e);
       return httpErrors.invalidDataError(e);
@@ -103,14 +103,14 @@ export default (usersDao, authManager) => {
     try {
       const user = await authManager.verifyUser(token);
       const userInfo = httpRequest.body;
-      let user;
+      let newUser;
       try {
-        user = await buildUser(userInfo);
+        newUser = await buildUser(userInfo);
       } catch (e) {
         return httpErrors.invalidDataError(e);
       }
       try {
-        await usersDao.update(user.id, user);
+        await usersDao.update(user.id, newUser);
         return httpResponses.noContent('Utilisateur modifié.');
       } catch (e) {
         return httpErrors.serverError();

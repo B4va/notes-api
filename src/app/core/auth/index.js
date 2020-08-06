@@ -3,7 +3,7 @@
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 import buildTokenDao from './auth_dao';
-import encrypter from '../helpers/utils/encrypter';
+import { isValid } from '../helpers/utils/encrypter';
 
 export default buildAuthManager;
 
@@ -15,7 +15,7 @@ export default buildAuthManager;
 async function buildAuthManager(database) {
   const authDao = buildTokenDao(database);
   return Object.freeze({
-    verifyToken,
+    verifyUser,
     revokeToken,
     authenticateUser,
     revokeAll,
@@ -28,9 +28,9 @@ async function buildAuthManager(database) {
    * @returns {String} token de connexion
    * @throws {Error} si le mot de passe et/ou l'email est invalide
    */
-  async function authenticateUser(email) {
+  async function authenticateUser(email, password) {
     const user = authDao.findUser(email);
-    if (user && encrypter.validate(user.password)) {
+    if (user && isValid(password, user.password)) {
       return {
         user: user,
         token: _generateToken(user.trace),

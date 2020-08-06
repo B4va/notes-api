@@ -1,4 +1,4 @@
-import DataValidationError from '../core/helpers/data_validation_error';
+import DataValidationError from '../core/helpers/errors/data_validation_error';
 
 /**
  * Modélisation et validation d'une note.

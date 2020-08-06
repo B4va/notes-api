@@ -1,5 +1,5 @@
 import mongo from 'mongodb';
-import uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 /**
  * Constructeur de la DAO propre à l'authentification des utilisateurs.
@@ -9,9 +9,9 @@ import uuid from 'uuid';
 export default (database) => {
   return Object.freeze({
     isRevokedToken,
-    checkUser,
+    findUser,
     findTrace,
-    addToken,
+    addRevokedToken,
     changeTrace,
   });
 
@@ -22,8 +22,8 @@ export default (database) => {
    */
   async function isRevokedToken(token) {
     const db = await database;
-    const token = await db.collection('token').findOne({ token: token });
-    return !!token;
+    const check = await db.collection('token').findOne({ token: token });
+    return !!check;
   }
 
   /**

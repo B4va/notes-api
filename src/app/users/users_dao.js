@@ -1,5 +1,5 @@
 import mongo from 'mongodb';
-import UniqueViolationError from '../core/helpers/unique_violation_error';
+import UniqueViolationError from '../core/helpers/errors/unique_violation_error';
 
 /**
  * Constructeur de la DAO propre aux utilisateurs.

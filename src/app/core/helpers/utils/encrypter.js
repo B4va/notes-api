@@ -5,10 +5,10 @@ import bcrypt from 'bcrypt';
  * @param {String} password mot de passe
  * @returns {String} hash du mot de passe
  */
-export async function hash(password) {
+export const hash = async (password) => {
   const SALT_ROUNDS = 10;
   return await bcrypt.hash(password, SALT_ROUNDS);
-}
+};
 
 /**
  * Vérifie la validité d'un mot de passe en comparant
@@ -17,6 +17,5 @@ export async function hash(password) {
  * @param {String} hash hash conservé en base de données
  * @returns {boolean} true si le mot de passe est valide 
  */
-export async function validate(password, hash) {
-  return await bcrypt.compare(password, hash);
-}
+export const isValid = async (password, hash) =>
+  await bcrypt.compare(password, hash);
