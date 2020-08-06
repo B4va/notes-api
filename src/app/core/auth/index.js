@@ -3,7 +3,7 @@
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 import buildTokenDao from './auth_dao';
-import encrypter from '../helpers/process/encrypter';
+import encrypter from '../helpers/utils/encrypter';
 
 export default buildAuthManager;
 

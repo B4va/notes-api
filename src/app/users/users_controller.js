@@ -4,7 +4,7 @@ import * as auth from '../core/auth';
 import buildUser from './user_model';
 import adaptAuth from '../core/helpers/auth_adapter';
 import UniqueViolationError from '../core/helpers/unique_violation_error';
-import encrypter from '../core/helpers/process/encrypter';
+import encrypter from '../core/helpers/utils/encrypter';
 
 /**
  * Constructeur du controleur des utilisateurs.
