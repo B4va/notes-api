@@ -40,9 +40,9 @@ export default (database) => {
    * Accède à toutes les notes.
    * @returns {Array} liste de note
    */
-  async function readAll() {
+  async function readAll(userId) {
     const db = await database;
-    return await db.collection('notes').find({}).toArray();
+    return await db.collection('notes').findOne({ userId: userId }).toArray();
   }
 
   /**

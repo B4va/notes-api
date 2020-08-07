@@ -43,11 +43,16 @@ export default (notesDao, authManager) => {
    * @returns {Object} réponse http
    */
   async function getNote(httpRequest) {
-    const result = await notesDao.read(httpRequest.pathParams.id);
-    if (!result) {
-      return httpErrors.noDataFoundError();
+    try {
+      const user = await authManager.verifyUser(token);
+      const result = await notesDao.read(httpRequest.pathParams.id);
+      if (!result) {
+        return httpErrors.noDataFoundError();
+      }
+      return httpResponses.ok(result);
+    } catch (e) {
+      return httpErrors.authValidationError();
     }
-    return httpResponses.ok(result);
   }
 
   /**
@@ -58,8 +63,13 @@ export default (notesDao, authManager) => {
    * @returns {Object} réponse http
    */
   async function getNotes(httpRequest) {
-    const result = await notesDao.readAll();
-    return httpResponses.ok(result);
+    try {
+      const user = await authManager.verifyUser(token);
+      const result = await notesDao.readAll(user._id);
+      return httpResponses.ok(result);
+    } catch (e) {
+      return httpErrors.authValidationError();
+    }
   }
 
   /**
@@ -72,9 +82,16 @@ export default (notesDao, authManager) => {
    */
   async function postNote(httpRequest) {
     const noteInfo = httpRequest.body;
+    let user;
+    try {
+      const user = await authManager.verifyUser(token);
+    } catch (e) {
+      return httpErrors.authValidationError();
+    }
     let note;
     try {
       note = buildNote(noteInfo);
+      note.userId = user._id;
     } catch (e) {
       return httpErrors.invalidDataError(e);
     }
@@ -96,6 +113,11 @@ export default (notesDao, authManager) => {
    */
   async function putNote(httpRequest) {
     const noteInfo = httpRequest.body;
+    try {
+      await authManager.verifyUser(token);
+    } catch (e) {
+      return httpErrors.authValidationError();
+    }
     let note;
     try {
       note = buildNote(noteInfo);
@@ -117,8 +139,16 @@ export default (notesDao, authManager) => {
    * @returns {Object} réponse http
    */
   async function deleteNote(httpRequest) {
+    let user;
+    try {
+      const user = await authManager.verifyUser(token);
+    } catch (e) {
+      return httpErrors.authValidationError();
+    }
     const note = await notesDao.read(httpRequest.pathParams.id);
-    if (!note) {
+    if (note.userId != user._id) {
+      return httpErrors.authValidationError();
+    } else if (!note) {
       return httpErrors.noDataFoundError();
     }
     const result = notesDao.remove(httpRequest.pathParams.id);
