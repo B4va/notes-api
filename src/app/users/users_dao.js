@@ -7,69 +7,68 @@ import UniqueViolationError from '../core/helpers/errors/unique_violation_error'
  * @returns {Object} méthodes DAO utilisateurs
  */
 export default (database) => {
-  // TODO : Revoir la gestion de l'unicité
-  // ! email unique
+	// TODO : Revoir la gestion de l'unicité
+	// TODO : Revoir la gestion de 'trace' ; à mettre dans le modèle
+	// TODO : Revoir l'update, pour mise à jour des champs particuliers et chiffrement du nouveau mdp
+	// TODO : Revoir la gestion du chiffrement du mot de passe : dans le modèle ?
+	// TODO : Supprimer les notes de l'utilisateur quand utilisateur supprimé
 
-  return Object.freeze({
-    create,
-    read,
-    update,
-    remove,
-  });
+	return Object.freeze({
+		create,
+		read,
+		update,
+		remove,
+	});
 
-  /**
+	/**
    * Crée un utilisateur.
    * @param {Object} user informations utilisateur
    * @returns {Object} utilisateur
    * @throws {UniqueViolationError} si l'email saisi est déjà utilisé
    */
-  async function create(user) {
-    const db = await database;
-    if (!_isEmailUnique(user.email, db))
-      throw new UniqueViolationError("L'adresse mail est déjà utilisée.");
-    return await db.collection('users').insertOne(user);
-  }
+	async function create(user) {
+		const db = await database;
+		if (!_isEmailUnique(user.email, db)) throw new UniqueViolationError("L'adresse mail est déjà utilisée.");
+		return await db.collection('users').insertOne(user);
+	}
 
-  async function _isEmailUnique(email, db) {
-    const check = await db.collection('users').findOne({ email: email });
-    return !check;
-  }
+	async function _isEmailUnique(email, db) {
+		const check = await db.collection('users').findOne({ email: email });
+		return !check;
+	}
 
-  /**
+	/**
    * Accède à un utilisateur.
    * @param {String} userId id utilisateur
    * @returns {Object} utilisateur
    */
-  async function read(userId) {
-    const db = await database;
-    const id = new mongo.ObjectID(userId);
-    return await db.collection('users').findOne({ _id: id });
-  }
+	async function read(userId) {
+		const db = await database;
+		const id = new mongo.ObjectID(userId);
+		return await db.collection('users').findOne({ _id: id });
+	}
 
-  /**
+	/**
    * Met à jour un utilisateur.
    * @param {String} userId id utilisateur
    * @param {Object} userInfo informations utilisateur
    * @returns {Object} utilisateur
    */
-  async function update(userId, userInfo) {
-    const db = await database;
-    if (!isEmailUnique(userInfo.email, db))
-      throw new UniqueViolationError("L'adresse mail est déjà utilisée.");
-    const id = new mongo.ObjectID(userId);
-    return await db
-      .collection('users')
-      .updateOne({ _id: id }, { $set: userInfo });
-  }
+	async function update(userId, userInfo) {
+		const db = await database;
+		if (!_isEmailUnique(userInfo.email, db)) throw new UniqueViolationError("L'adresse mail est déjà utilisée.");
+		const id = new mongo.ObjectID(userId);
+		return await db.collection('users').updateOne({ _id: id }, { $set: userInfo });
+	}
 
-  /**
+	/**
    * Supprime un utilisateur.
    * @param {String} userId id utilisateur
    * @returns {Object} utilisateur
    */
-  async function remove(userId) {
-    const db = await database;
-    const id = new mongo.ObjectID(userId);
-    return await db.collection('users').deleteOne({ _id: id });
-  }
+	async function remove(userId) {
+		const db = await database;
+		const id = new mongo.ObjectID(userId);
+		return await db.collection('users').deleteOne({ _id: id });
+	}
 };
