@@ -1,4 +1,4 @@
-import mongo from 'mongodb';
+import adaptId from '../core/helpers/adapters/id_adapter';
 import UniqueViolationError from '../core/helpers/errors/unique_violation_error';
 
 /**
@@ -7,12 +7,6 @@ import UniqueViolationError from '../core/helpers/errors/unique_violation_error'
  * @returns {Object} méthodes DAO utilisateurs
  */
 export default (database) => {
-	// TODO : Revoir la gestion de l'unicité
-	// TODO : Revoir la gestion de 'trace' ; à mettre dans le modèle
-	// TODO : Revoir l'update, pour mise à jour des champs particuliers et chiffrement du nouveau mdp
-	// TODO : Revoir la gestion du chiffrement du mot de passe : dans le modèle ?
-	// TODO : Supprimer les notes de l'utilisateur quand utilisateur supprimé
-
 	return Object.freeze({
 		create,
 		read,
@@ -44,7 +38,7 @@ export default (database) => {
    */
 	async function read(userId) {
 		const db = await database;
-		const id = new mongo.ObjectID(userId);
+		const id = adaptId(userId);
 		return await db.collection('users').findOne({ _id: id });
 	}
 
@@ -57,7 +51,7 @@ export default (database) => {
 	async function update(userId, userInfo) {
 		const db = await database;
 		if (!_isEmailUnique(userInfo.email, db)) throw new UniqueViolationError("L'adresse mail est déjà utilisée.");
-		const id = new mongo.ObjectID(userId);
+		const id = adaptId(userId);
 		return await db.collection('users').updateOne({ _id: id }, { $set: userInfo });
 	}
 
@@ -68,7 +62,7 @@ export default (database) => {
    */
 	async function remove(userId) {
 		const db = await database;
-		const id = new mongo.ObjectID(userId);
+		const id = adaptId(userId);
 		return await db.collection('users').deleteOne({ _id: id });
 	}
 };
