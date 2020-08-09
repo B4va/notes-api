@@ -4,6 +4,12 @@ import DataValidationError from '../core/helpers/errors/data_validation_error';
  * Modélisation et validation d'une note.
  * @param {Object} noteInfo données
  * @returns {Object} note validée et normalisée
+ * 
+ * Une note comprends un titre pouvant être nul, un contenu pouvant être nul
+ * et une couleur, par défaut définie comme grise et devant faire partie de
+ * la liste des couleurs prédéfinie. Chaque note appartient à un utilisateur (1..*) ;
+ * l'identifiant de l'utilisateur est associé à la note au moment de sa création qui
+ * nécessite donc qu'un utilisateur soit authentifié.
  */
 export default (noteInfo) => {
 	/**
