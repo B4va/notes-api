@@ -57,7 +57,6 @@ export default (notesDao, authManager) => {
 				return httpResponses.ok(result);
 			}
 		} catch (e) {
-			console.log(e);
 			if (e instanceof InvalidQueryError) {
 				return httpErrors.invalidRequestError();
 			} else {
@@ -80,7 +79,6 @@ export default (notesDao, authManager) => {
 			const result = await notesDao.readAll(userId);
 			return httpResponses.ok(result);
 		} catch (e) {
-			console.log(e);
 			return httpErrors.authValidationError();
 		}
 	}
@@ -107,7 +105,6 @@ export default (notesDao, authManager) => {
 			note = buildNote(noteInfo);
 			note.userId = userId;
 		} catch (e) {
-			console.log(e);
 			return httpErrors.invalidDataError(e);
 		}
 		try {
