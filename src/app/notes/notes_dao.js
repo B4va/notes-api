@@ -54,6 +54,7 @@ export default (database) => {
 	async function update(noteId, noteInfo) {
 		const db = await database;
 		const id = adaptId(noteId);
+		console.log(noteInfo);
 		return await db.collection('notes').updateOne({ _id: id }, { $set: noteInfo });
 	}
 

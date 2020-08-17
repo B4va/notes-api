@@ -9,9 +9,9 @@ const root = '/api/v0';
  * @param {Object} database base de données
  * @param {Object} authManager gestionnaire d'authentification
  */
-export default (app, database, authManager) => {
-	const usersHandler = buildUsersHandler(database, authManager);
-	const notesHandler = buildNotesHandler(database, authManager);
+export default async (app, database, authManager) => {
+	const usersHandler = await buildUsersHandler(database, authManager);
+	const notesHandler = await buildNotesHandler(database, authManager);
 
 	/**
    * USERS

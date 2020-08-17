@@ -14,22 +14,83 @@ import usersDao from './users_dao';
  * trace associée à l'utilisateur qui sera mise à jour, révoquant de fait les tokens
  * précédemment générés. Un utilisateur peut être associé à un nombre indéfini de notes (*..1).
  */
-export default async (userInfo) => {
-	const user = await _validate(userInfo);
-	return _normalize(userInfo);
+export default (userInfo) => {
+	/**
+	 * Liste d'erreurs.
+	 */
+	let ERRORS = [];
+
+	return {
+		buildNew: buildNew(),
+		buildUpdate: buildUpdate(),
+	};
+
+	/**
+	 * Valide et normalise un nouvel utilisateur.
+	 * @returns {Object} utilisateur
+	 */
+	function buildNew() {
+		_validateNew(userInfo);
+		return _normalizeNew(userInfo);
+	}
 
 	/**
    * Valide les attributs d'un utilisateur.
    * @param {Object} param0 utilisateur à valider (dstrc)
-   * @returns {Object} utilisateur validé
    * @throws {DataValidationError} si les données saisies sont invalides
    */
-	async function _validate({ email, password, trace } = {}) {
-		const errors = [];
-		const validEmail = await _validateEmail(email, errors);
-		const validPassword = _validatePassword(password, errors);
-		if (!validEmail || !validPassword) throw new DataValidationError(errors);
-		return { email, password, trace };
+	async function _validateNew({ email, password, trace } = {}) {
+		const validEmail = await _validateEmail(email);
+		const validPassword = _validatePassword(password);
+		if (!validEmail || !validPassword) throw new DataValidationError(ERRORS);
+	}
+
+	/**
+   * Normalise les attributs de l'utilisateur.
+   * @param {Object} param0 utilisateur à normaliser (destrc)
+   * @returns {Object} utilisateur normalisé
+   */
+	function _normalizeNew({ email, password, trace }) {
+		return {
+			email: email,
+			password: password,
+			trace: trace,
+		};
+	}
+
+	/**
+	 * Valide et normalise la mise à jour d'un utilisateur.
+	 * @returns {Object} mise à jour de l'utilisateur
+	 */
+	function buildUpdate() {
+		_validateUpdate(userInfo);
+		return _normalizeUpdate(userInfo);
+	}
+
+	/**
+   * Valide les nouveaux attributs de l'utilisateur.
+   * @param {Object} userInfo nouveaux attributs
+   * @throws {DataValidationError} si les données saisie sont invalides
+   */
+	async function _validateUpdate(userInfo) {
+		const validEmail = userInfo.email ? _validateEmail(userInfo.email) : true;
+		const validPassword = userInfo.password ? _validatePassword(userInfo.password) : true;
+		if (!validEmail || !validPassword) throw new DataValidationError(ERRORS);
+	}
+
+	function _normalizeUpdate(userInfo) {
+		let result = {};
+		if (userInfo.email) {
+			result.email = userInfo.email;
+		}
+		if (userInfo.password) {
+			result.password = userInfo.password;
+		}
+		if (userInfo.trace) {
+			result.trace = userInfo.trace;
+		}
+		console.log(1, result);
+		return result;
 	}
 
 	/**
@@ -38,15 +99,15 @@ export default async (userInfo) => {
    * @param {Array} errors liste d'erreurs
    * @returns {boolean} true si l'email est valide
    */
-	async function _validateEmail(email, errors) {
+	function _validateEmail(email) {
 		// Présence
 		if (!email) {
-			errors.push('Une adresse email doit être renseignée.');
+			ERRORS.push('Une adresse email doit être renseignée.');
 			return false;
 		}
 		// Format
 		if (!_isValidEmailFormat(email)) {
-			errors.push("L'adresse email renseignée est invalide.");
+			ERRORS.push("L'adresse email renseignée est invalide.");
 			return false;
 		}
 		return true;
@@ -80,18 +141,5 @@ export default async (userInfo) => {
 			return false;
 		}
 		return true;
-	}
-
-	/**
-   * Normalise les attributs de l'utilisateur.
-   * @param {Object} param0 utilisateur à normaliser (destrc)
-   * @returns {Object} utilisateur normalisé
-   */
-	function _normalize({ email, password, trace }) {
-		return {
-			email: email,
-			password: password,
-			trace: trace,
-		};
 	}
 };

@@ -1,10 +1,10 @@
 import * as httpErrors from '../core/helpers/http/http_errors';
 import * as httpResponses from '../core/helpers/http/http_responses';
 import * as auth from '../core/auth';
-import buildUser from './user_model';
+import User from './user_model';
 import adaptAuth from '../core/helpers/adapters/auth_adapter';
 import UniqueViolationError from '../core/helpers/errors/unique_violation_error';
-import { hash } from '../core/helpers/utils/encrypter';
+import { hash } from '../core/helpers/process/encrypter';
 
 /**
  * Constructeur du controleur des utilisateurs.
@@ -72,10 +72,11 @@ export default (usersDao, authManager) => {
 		const userInfo = httpRequest.body;
 		let user;
 		try {
-			user = await buildUser(userInfo);
-			user.password = await hash(user.password);
+			user = User(userInfo).buildNew;
+			user.password = await hash(userInfo.password);
 			user.trace = authManager.generateTrace();
 		} catch (e) {
+			console.log(e)
 			return httpErrors.invalidDataError(e);
 		}
 		try {
@@ -103,7 +104,7 @@ export default (usersDao, authManager) => {
 			const userInfo = httpRequest.body;
 			let newUser;
 			try {
-				newUser = await buildUser(userInfo);
+				newUser = User(userInfo).buildUpdate;
 			} catch (e) {
 				return httpErrors.invalidDataError(e);
 			}
@@ -143,9 +144,10 @@ export default (usersDao, authManager) => {
    */
 	async function loginUser(httpRequest) {
 		try {
-      const result = await authManager.authenticateUser(httpRequest.body.email, httpRequest.body.password);
+			const result = await authManager.authenticateUser(httpRequest.body.email, httpRequest.body.password);
 			return httpResponses.ok(result);
 		} catch (e) {
+			console.log(e)
 			return httpErrors.authValidationError();
 		}
 	}
@@ -177,8 +179,8 @@ export default (usersDao, authManager) => {
 		const token = adaptAuth(httpRequest);
 		try {
 			const user = await authManager.verifyUser(token);
-      const result = await authManager.revokeAll(user.id);
-      return httpResponses.ok(result);
+			const result = await authManager.revokeAll(user.id);
+			return httpResponses.ok(result);
 		} catch (e) {
 			return httpErrors.authValidationError();
 		}

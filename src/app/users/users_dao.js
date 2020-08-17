@@ -6,13 +6,15 @@ import UniqueViolationError from '../core/helpers/errors/unique_violation_error'
  * @param {Object} database base de données
  * @returns {Object} méthodes DAO utilisateurs
  */
-export default (database) => {
+export default async (database) => {
 	return Object.freeze({
 		create,
 		read,
 		update,
 		remove,
 	});
+
+	let db = await database;
 
 	/**
    * Crée un utilisateur.
@@ -28,6 +30,7 @@ export default (database) => {
 
 	async function _isEmailUnique(email, db) {
 		const check = await db.collection('users').findOne({ email: email });
+		console.log(check);
 		return !check;
 	}
 

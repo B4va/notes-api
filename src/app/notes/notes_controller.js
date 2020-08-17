@@ -1,6 +1,6 @@
 import * as httpErrors from '../core/helpers/http/http_errors';
 import * as httpResponses from '../core/helpers/http/http_responses';
-import buildNote from './note_model';
+import Note from './note_model';
 import adaptAuth from '../core/helpers/adapters/auth_adapter';
 import InvalidQueryError from '../core/helpers/errors/invalid_query_error';
 
@@ -49,10 +49,10 @@ export default (notesDao, authManager) => {
 		try {
 			const userId = await authManager.verifyUser(token);
 			const result = await notesDao.read(httpRequest.pathParams.id);
-			if (result.userId.toString() !== userId.toString()) {
-				return httpErrors.authValidationError();
-			} else if (!result) {
+			if (!result) {
 				return httpErrors.noDataFoundError();
+			} else if (result.userId.toString() !== userId.toString()) {
+				return httpErrors.authValidationError();
 			} else {
 				return httpResponses.ok(result);
 			}
@@ -102,9 +102,10 @@ export default (notesDao, authManager) => {
 		}
 		let note;
 		try {
-			note = buildNote(noteInfo);
+			note = Note(noteInfo).buildNew;
 			note.userId = userId;
 		} catch (e) {
+			console.log(e);
 			return httpErrors.invalidDataError(e);
 		}
 		try {
@@ -133,14 +134,17 @@ export default (notesDao, authManager) => {
 		}
 		let note;
 		try {
-			note = buildNote(noteInfo);
+			note = Note(noteInfo).buildUpdate;
+			console.log(note);
 		} catch (e) {
+			console.log(e);
 			return httpErrors.invalidDataError(e);
 		}
 		try {
-			const result = notesDao.update(httpRequest.pathParams.id, note);
+			const result = await notesDao.update(httpRequest.pathParams.id, note);
 			return httpResponses.noContent('Note modifiée.');
 		} catch (e) {
+			console.log(e);
 			return httpErrors.serverError();
 		}
 	}
