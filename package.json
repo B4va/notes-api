@@ -1,28 +1,33 @@
 {
-  "name": "notes-api",
-  "version": "1.0.0",
-  "description": "Test app",
-  "main": "index.js",
-  "scripts": {
-    "clean": "rm -r node_modules && rm package-lock.json",
-    "start": "node -r esm src/index.js",
-    "devStart": "nodemon -r esm src/index.js",
-    "test": "jest"
-  },
-  "author": "Loïc Steinmetz",
-  "license": "ISC",
-  "devDependencies": {
-    "jest": "^26.1.0",
-    "nodemon": "^2.0.4"
-  },
-  "dependencies": {
-    "bcrypt": "^5.0.0",
-    "body-parser": "^1.19.0",
-    "dotenv": "^8.2.0",
-    "esm": "^3.2.25",
-    "express": "^4.17.1",
-    "jsonwebtoken": "^8.5.1",
-    "mongodb": "^3.5.9",
-    "uuid": "^8.3.0"
-  }
+	"name": "notes-api",
+	"version": "1.0.0",
+	"description": "Test app",
+	"main": "index.js",
+	"scripts": {
+		"clean": "rm -r node_modules && rm package-lock.json",
+		"start": "node -r esm src/index.js",
+		"devStart": "nodemon -r esm src/index.js",
+		"test": "jest",
+		"seed": "node -r esm src/seed.js",
+		"pretest": "npm run seed"
+	},
+	"author": "Loïc Steinmetz",
+	"license": "ISC",
+	"devDependencies": {
+		"@babel/plugin-transform-modules-commonjs": "^7.10.4",
+		"jest": "^26.1.0",
+		"nodemon": "^2.0.4",
+		"sinon": "^9.0.3"
+	},
+	"dependencies": {
+		"bcrypt": "^5.0.0",
+		"body-parser": "^1.19.0",
+		"dotenv": "^8.2.0",
+		"esm": "^3.2.25",
+		"express": "^4.17.1",
+		"jsonwebtoken": "^8.5.1",
+		"mock-req-res": "^1.2.0",
+		"mongodb": "^3.5.9",
+		"uuid": "^8.3.0"
+	}
 }

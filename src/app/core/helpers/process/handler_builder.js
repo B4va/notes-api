@@ -7,6 +7,7 @@ import isClientValid from '../process/client_validator';
  * @returns {Function} prise en charge de la requête
  */
 export default (control) => (req, res) => {
+	console.log(req)
 	const httpRequest = adaptRequest(req);
 	if (!isClientValid(httpRequest, res)) return;
 	control(httpRequest)
