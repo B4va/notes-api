@@ -8,7 +8,7 @@
 		"start": "node -r esm src/index.js",
 		"devStart": "nodemon -r esm src/index.js",
 		"test": "jest",
-		"seed": "node -r esm src/seed.js",
+		"seed": "node -r esm ./seed.js",
 		"pretest": "npm run seed"
 	},
 	"author": "Loïc Steinmetz",

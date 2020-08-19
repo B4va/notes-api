@@ -1,5 +1,5 @@
 import adaptId from '../../app/core/helpers/adapters/id_adapter';
-import buildDatabase from '../../app/core/db/index';
+import buildDatabase from '../../../app/core/db/index';
 import InvalidQueryError from '../../app/core/helpers/errors/invalid_query_error';
 
 /**

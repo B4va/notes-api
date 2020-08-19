@@ -1,5 +1,5 @@
 import { mockRequest } from 'mock-req-res';
-import adaptRequest from '../../app/core/helpers/adapters/request_adapter';
+import adaptRequest from '../../../app/core/adapters/request_adapter';
 
 /**
  * Tests de app/core/helpers/adapters/request_adapter.js

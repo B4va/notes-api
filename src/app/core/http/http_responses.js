@@ -1,4 +1,4 @@
-import buildDatabase from '../../db';
+import buildDatabase from '../db';
 
 /**
  * Construit une réponse http valide.

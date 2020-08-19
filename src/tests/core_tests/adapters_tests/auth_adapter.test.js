@@ -1,4 +1,4 @@
-import adaptAuth from '../../app/core/helpers/adapters/auth_adapter';
+import adaptAuth from '../../../app/core/adapters/auth_adapter';
 
 /**
  * Tests de app/core/helpers/adapters/auth_adapter.js

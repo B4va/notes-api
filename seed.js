@@ -1,4 +1,4 @@
-import buildDatabase from './app/core/db/index';
+import buildDatabase from './src/app/core/db/index';
 import mongo from 'mongodb';
 
 seed();
