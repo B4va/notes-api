@@ -4,6 +4,10 @@
  * @returns {String} token de connexion
  */
 export default (httpRequest) => {
-  const authHeader = httpRequest.headers['authorization'];
-  return authHeader.split(' ')[1];
+	const authHeader = httpRequest.headers['authorization'];
+	if (authHeader) {
+		return authHeader.split(' ')[1];
+	} else {
+		return '';
+	}
 };
