@@ -1,8 +1,8 @@
-import * as httpErrors from '../core/helpers/http/http_errors';
-import * as httpResponses from '../core/helpers/http/http_responses';
+import * as httpErrors from '../../core/http/http_errors';
+import * as httpResponses from '../../core/http/http_responses';
 import Note from './note_model';
-import adaptAuth from '../core/helpers/adapters/auth_adapter';
-import InvalidQueryError from '../core/helpers/errors/invalid_query_error';
+import adaptAuth from '../../core/adapters/auth_adapter';
+import InvalidQueryError from '../../core/errors/invalid_query_error';
 
 /**
  * Constructeur du controleur des notes.
@@ -105,7 +105,6 @@ export default (notesDao, authManager) => {
 			note = Note(noteInfo).buildNew;
 			note.userId = userId;
 		} catch (e) {
-			console.log(e);
 			return httpErrors.invalidDataError(e);
 		}
 		try {
@@ -135,16 +134,13 @@ export default (notesDao, authManager) => {
 		let note;
 		try {
 			note = Note(noteInfo).buildUpdate;
-			console.log(note);
 		} catch (e) {
-			console.log(e);
 			return httpErrors.invalidDataError(e);
 		}
 		try {
 			const result = await notesDao.update(httpRequest.pathParams.id, note);
 			return httpResponses.noContent('Note modifiée.');
 		} catch (e) {
-			console.log(e);
 			return httpErrors.serverError();
 		}
 	}

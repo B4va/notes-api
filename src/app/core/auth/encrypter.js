@@ -6,7 +6,6 @@ import bcrypt from 'bcrypt';
  * @returns {String} hash du mot de passe
  */
 export const hash = async (password) => {
-	console.log(password)
 	const SALT_ROUNDS = 10;
 	let hash = await bcrypt.hash(password, SALT_ROUNDS);
 	return hash;

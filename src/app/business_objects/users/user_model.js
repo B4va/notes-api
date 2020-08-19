@@ -1,4 +1,4 @@
-import DataValidationError from '../core/helpers/errors/data_validation_error';
+import DataValidationError from '../../core/errors/data_validation_error';
 import usersDao from './users_dao';
 
 /**
@@ -89,7 +89,6 @@ export default (userInfo) => {
 		if (userInfo.trace) {
 			result.trace = userInfo.trace;
 		}
-		console.log(1, result);
 		return result;
 	}
 

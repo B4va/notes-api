@@ -1,5 +1,5 @@
-import adaptId from '../core/helpers/adapters/id_adapter';
-import UniqueViolationError from '../core/helpers/errors/unique_violation_error';
+import adaptId from '../../core/adapters/id_adapter';
+import UniqueViolationError from '../../core/errors/unique_violation_error';
 
 /**
  * Constructeur de la DAO propre aux utilisateurs.
@@ -30,7 +30,6 @@ export default async (database) => {
 
 	async function _isEmailUnique(email, db) {
 		const check = await db.collection('users').findOne({ email: email });
-		console.log(check);
 		return !check;
 	}
 

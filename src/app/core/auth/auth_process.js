@@ -3,7 +3,7 @@
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 import buildTokenDao from './auth_dao';
-import { isValid } from '../helpers/process/encrypter';
+import { isValid } from '..//auth/encrypter';
 import { v4 as uuid } from 'uuid';
 
 export default buildAuthManager;

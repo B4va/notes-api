@@ -1,10 +1,10 @@
-import * as httpErrors from '../core/helpers/http/http_errors';
-import * as httpResponses from '../core/helpers/http/http_responses';
-import * as auth from '../core/auth';
+import * as httpErrors from '../../core/http/http_errors';
+import * as httpResponses from '../../core/http/http_responses';
+import * as auth from '../../core/auth/auth_process';
 import User from './user_model';
-import adaptAuth from '../core/helpers/adapters/auth_adapter';
-import UniqueViolationError from '../core/helpers/errors/unique_violation_error';
-import { hash } from '../core/helpers/process/encrypter';
+import adaptAuth from '../../core/adapters/auth_adapter';
+import UniqueViolationError from '../../core/errors/unique_violation_error';
+import { hash } from '../../core/auth/encrypter';
 
 /**
  * Constructeur du controleur des utilisateurs.
@@ -76,7 +76,6 @@ export default (usersDao, authManager) => {
 			user.password = await hash(userInfo.password);
 			user.trace = authManager.generateTrace();
 		} catch (e) {
-			console.log(e)
 			return httpErrors.invalidDataError(e);
 		}
 		try {
@@ -147,7 +146,6 @@ export default (usersDao, authManager) => {
 			const result = await authManager.authenticateUser(httpRequest.body.email, httpRequest.body.password);
 			return httpResponses.ok(result);
 		} catch (e) {
-			console.log(e)
 			return httpErrors.authValidationError();
 		}
 	}

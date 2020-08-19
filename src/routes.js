@@ -1,5 +1,5 @@
-import buildUsersHandler from './app/users';
-import buildNotesHandler from './app/notes';
+import buildUsersHandler from './app/business_objects/users';
+import buildNotesHandler from './app/business_objects/notes';
 
 const root = '/api/v0';
 

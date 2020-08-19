@@ -1,6 +1,6 @@
 import buildUsersDao from './users_dao';
 import buildUsersController from './users_controller';
-import buildUsersHandler from '../core/helpers/process/handler_builder';
+import buildUsersHandler from '../../core/process/handler_builder';
 
 export default async (database, authManager) => {
   const usersDao = await buildUsersDao(database);

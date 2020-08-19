@@ -5,9 +5,10 @@ seed();
 
 async function seed() {
 	const db = await buildDatabase();
-	console.log('-- Connecté à la base de données --\n')
+	console.log('-- Connecté à la base de données --\n');
 	await execute('delete all', db, deleteAll);
 	await execute('users', db, usersSeed);
+	await execute('token', db, tokenSeed);
 	await execute('notes', db, notesSeed);
 	console.log('\n-- SEED :: OK --\n');
 	process.exit(0);
@@ -19,6 +20,7 @@ async function seed() {
 async function deleteAll(db) {
 	await db.collection('users').deleteMany({});
 	await db.collection('notes').deleteMany({});
+	await db.collection('token').deleteMany({})
 }
 
 /**
@@ -39,6 +41,15 @@ async function usersSeed(db, model) {
 		email: 'email3@mail.foo',
 		password: 'p@ssword',
 		trace: '9876543210',
+	});
+}
+
+/**
+ * Token. 
+ */
+async function tokenSeed(db, model) {
+	await db.collection(model).insertOne({
+		token: 'revokedtoken',
 	});
 }
 

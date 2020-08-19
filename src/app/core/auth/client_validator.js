@@ -1,6 +1,5 @@
-export default (httpRequest, res) => {
-	if (httpRequest.clientToken != process.env.CLIENT_TOKEN) {
-		res.status(401).send({ error: "Erreur d'authentification du client." });
+export default (httpRequest, secretToken) => {
+	if (httpRequest.clientToken != secretToken) {
 		return false;
 	} else {
 		return true;
