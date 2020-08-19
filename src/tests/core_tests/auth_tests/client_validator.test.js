@@ -1,5 +1,5 @@
 // TODO
 
 test('test', () => {
-  expect(1).toStrictEqual(1);
+	expect(1).toStrictEqual(1);
 });

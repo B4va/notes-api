@@ -1,9 +1,9 @@
-import adaptId from '../../app/core/helpers/adapters/id_adapter';
+import adaptId from '../../../app/core/adapters/id_adapter';
 import buildDatabase from '../../../app/core/db/index';
-import InvalidQueryError from '../../app/core/helpers/errors/invalid_query_error';
+import InvalidQueryError from '../../../app/core/errors/invalid_query_error';
 
 /**
- * Tests de app/core/helpers/adapters/id_adapter.js
+ * Tests de id_adapter
  */
 
 let id;

@@ -2,7 +2,7 @@ import { mockRequest } from 'mock-req-res';
 import adaptRequest from '../../../app/core/adapters/request_adapter';
 
 /**
- * Tests de app/core/helpers/adapters/request_adapter.js
+ * Tests de request_adapter
  */
 
 let httpRequest; // requête adaptée
