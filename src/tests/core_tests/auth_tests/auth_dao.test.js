@@ -25,12 +25,12 @@ beforeAll(async (done) => {
 });
 
 describe('authDao - isRevokedToken', () => {
-	test('renvoie vrai si le token appartient à la liste des token révoqués', async (done) => {
+	it('renvoie vrai si le token appartient à la liste des token révoqués', async (done) => {
 		const testRevokedToken = await authDao.isRevokedToken(revokedToken);
 		expect(testRevokedToken).toBeTruthy();
 		done();
 	});
-	test("renvoie faux si le token n'appartient pas à la liste des token révoqués", async (done) => {
+	it("renvoie faux si le token n'appartient pas à la liste des token révoqués", async (done) => {
 		const testValidToken = await authDao.isRevokedToken(validToken);
 		expect(testValidToken).toBeFalsy();
 		done();

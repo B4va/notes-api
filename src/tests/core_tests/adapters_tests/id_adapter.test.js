@@ -17,11 +17,11 @@ beforeAll(async (done) => {
 });
 
 describe('idAdapter', () => {
-	test('formatte un id correct', async (done) => {
+	it('formatte un id correct', async (done) => {
 		expect(id).toStrictEqual(note._id);
 		done();
 	});
-	test("renvoie une erreur InvalidQueryError si l'id n'a pas le bon format", () => {
+	it("renvoie une erreur InvalidQueryError si l'id n'a pas le bon format", () => {
 		expect(() => adaptId('invalidId')).toThrow(InvalidQueryError);
 	});
 });

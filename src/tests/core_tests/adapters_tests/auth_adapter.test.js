@@ -17,10 +17,10 @@ beforeAll(() => {
 });
 
 describe('authAdapter', () => {
-	test('récupère un token correct', () => {
+	it('récupère un token correct', () => {
 		expect(parsedToken).toStrictEqual(token);
 	});
-	test('renvoie une chaîne vide si aucun token', () => {
+	it('renvoie une chaîne vide si aucun token', () => {
 		let httpRequest = {
 			headers: {},
 		};

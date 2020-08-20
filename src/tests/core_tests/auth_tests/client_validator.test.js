@@ -9,10 +9,10 @@ let validHttpRequest = { clientToken: 'tokensecret' };
 let invalidHttpRequest = { clientToken: 'invalidToken' };
 
 describe('clientValidator', () => {
-	test('renvoie vrai si token valide', () => {
+	it('renvoie vrai si token valide', () => {
 		expect(isValidToken(validHttpRequest, tokenSecret)).toBeTruthy();
 	});
-	test('renvoie faux si token invalide', () => {
+	it('renvoie faux si token invalide', () => {
 		expect(isValidToken(invalidHttpRequest, tokenSecret)).toBeFalsy();
 	});
 });

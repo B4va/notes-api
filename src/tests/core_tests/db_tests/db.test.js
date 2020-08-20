@@ -13,7 +13,7 @@ beforeAll(async (done) => {
 });
 
 describe('dbBuilder', () => {
-	test('initialise la base de données', async (done) => {
+	it('initialise la base de données', async (done) => {
 		expect(collections.length).toBeGreaterThan(0);
 		done();
 	});

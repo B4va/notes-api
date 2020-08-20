@@ -23,12 +23,12 @@ describe('encrypter - hash', () => {
 });
 
 describe('encrypter - isValid', () => {
-	test('renvoie vrai si le mot de passe est valide', async (done) => {
+	it('renvoie vrai si le mot de passe est valide', async (done) => {
 		const testValid = await encrypter.isValid(validPassword, hash);
 		expect(testValid).toBeTruthy();
 		done();
 	});
-	test('renvoie faux si le mot de passe est invalide', async (done) => {
+	it('renvoie faux si le mot de passe est invalide', async (done) => {
 		const testInvalid = await encrypter.isValid(invalidPassword, hash);
 		expect(testInvalid).toBeFalsy();
 		done();

@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 import routes from './routes';
 import packageInfos from '../package.json';
 
+// TODO : Tests
 // TODO : Revoir la gestion de UPDATE : mettre à jour uniquement les attributs saisi + normaliser la requête pour éviter changement d'id par exemple
 // TODO : Supprimer les notes utilisateur quand suppression d'un utilisateur
 // TODO : Refac ; revoir notamment l'application du SRP + organisation des controleurs

@@ -27,25 +27,25 @@ beforeAll(() => {
 });
 
 describe('requestAdapter', () => {
-	test('récupère un chemin correct', () => {
+	it('récupère un chemin correct', () => {
 		expect(httpRequest.path).toStrictEqual(path);
 	});
-	test('récupère une méthode correcte', () => {
+	it('récupère une méthode correcte', () => {
 		expect(httpRequest.method).toStrictEqual(method);
 	});
-	test('récupère des paramètres corrects', () => {
+	it('récupère des paramètres corrects', () => {
 		expect(httpRequest.params).toStrictEqual(params);
 	});
-	test('récupère une query correcte', () => {
+	it('récupère une query correcte', () => {
 		expect(httpRequest.query).toStrictEqual(query);
 	});
-	test('récupère un corps correct', () => {
+	it('récupère un corps correct', () => {
 		expect(httpRequest.body).toStrictEqual(body);
 	});
-	test('récupère une en-tête correcte', () => {
+	it('récupère une en-tête correcte', () => {
 		expect(httpRequest.headers).toStrictEqual(headers);
 	});
-	test('récupère un token clien correct', () => {
+	it('récupère un token clien correct', () => {
 		expect(httpRequest.clientToken).toStrictEqual(clientToken);
 	});
 });

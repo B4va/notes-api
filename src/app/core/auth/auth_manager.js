@@ -1,9 +1,7 @@
-// ! à tester
-
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
-import buildTokenDao from './auth_dao';
-import { isValid } from '..//auth/encrypter';
+import buildAuthDao from './auth_dao';
+import { isValid } from './encrypter';
 import { v4 as uuid } from 'uuid';
 
 export default buildAuthManager;
@@ -14,7 +12,7 @@ export default buildAuthManager;
  * @returns {Object} méthodes d'authentification
  */
 async function buildAuthManager(database) {
-	const authDao = buildTokenDao(database);
+	const authDao = buildAuthDao(database);
 	return Object.freeze({
 		verifyUser,
 		revokeToken,
@@ -58,7 +56,7 @@ async function buildAuthManager(database) {
 		if (await authDao.isRevokedToken(token)) {
 			throw new Error();
 		}
-    const trace = await jwt.verify(token, process.env.TOKEN_SECRET);
+		const trace = await jwt.verify(token, process.env.TOKEN_SECRET);
 		const user = await authDao.findTrace(trace.trace);
 		if (user) {
 			return user._id;
