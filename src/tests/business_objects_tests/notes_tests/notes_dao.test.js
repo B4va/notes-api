@@ -1,5 +1,29 @@
-// TODO
+/**
+ * Tests de notes_dao.
+ */
 
-test('test', () => {
-  expect(1).toStrictEqual(1);
+beforeAll(() => {});
+
+describe('notesDao - create', () => {
+	// TODO
+});
+
+describe('notesDao - read', () => {
+	// TODO
+});
+
+describe('notesDao - readAll', () => {
+	// TODO
+});
+
+describe('notesDao - update', () => {
+	// TODO
+});
+
+describe('notesDao - remove', () => {
+	// TODO
+});
+
+describe('notesDao - removeAll', () => {
+	// TODO
 });

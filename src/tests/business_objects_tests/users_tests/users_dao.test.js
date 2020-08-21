@@ -1,5 +1,21 @@
-// TODO
+/**
+ * Tests de users_dao.
+ */
 
-test('test', () => {
-  expect(1).toStrictEqual(1);
+beforeAll(() => {});
+
+describe('usersDao - create', () => {
+	// TODO
+});
+
+describe('usersDao - read', () => {
+	// TODO
+});
+
+describe('usersDao - update', () => {
+	// TODO
+});
+
+describe('usersDao - removeAll', () => {
+	// TODO
 });

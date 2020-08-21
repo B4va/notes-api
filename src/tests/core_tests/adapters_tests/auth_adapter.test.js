@@ -1,7 +1,7 @@
 import adaptAuth from '../../../app/core/adapters/auth_adapter';
 
 /**
- * Tests auth_adapter
+ * Tests de auth_adapter.
  */
 
 let parsedToken;

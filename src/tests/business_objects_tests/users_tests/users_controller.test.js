@@ -1,5 +1,37 @@
-// TODO
+/**
+ * Tests de users_controller.
+ */
 
-test('test', () => {
-  expect(1).toStrictEqual(1);
+beforeAll(() => {});
+
+describe('usersController - rooting', () => {
+	// TODO
+});
+
+describe('usersController - getUser', () => {
+	// TODO
+});
+
+describe('usersController - postUser', () => {
+	// TODO
+});
+
+describe('usersController - putUser', () => {
+	// TODO
+});
+
+describe('usersController - deleteUser', () => {
+	// TODO
+});
+
+describe('usersController - loginUser', () => {
+	// TODO
+});
+
+describe('usersController - revokeOneAccess', () => {
+	// TODO
+});
+
+describe('usersController - revokeAllAccess', () => {
+	// TODO
 });
