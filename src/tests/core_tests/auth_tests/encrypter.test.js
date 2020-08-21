@@ -17,7 +17,7 @@ describe('encrypter - hash', () => {
 	test('génère un hash différent du mot de passe initial', () => {
 		expect(hash).not.toBe(validPassword);
 	});
-	test('génère un hash de plus de vingt caractères', () => {
+	test('génère un hash de plus de 20 caractères', () => {
 		expect(hash.length).toBeGreaterThan(20);
 	});
 });

@@ -67,7 +67,7 @@ describe('authDao - addRevokedToken', () => {
 	test('ajoute un token révoqué en base de données', async (done) => {
 		await authDao.addRevokedToken(tokenToRevoke);
 		const testRevokedToken = await db.collection('token').findOne({ token: tokenToRevoke });
-		expect(testRevokedToken).not.toBe(null);
+		expect(testRevokedToken).not.toBe(undefined);
 		done();
 	});
 });

@@ -9,6 +9,7 @@ import jwt from 'jsonwebtoken';
 let db;
 let authManager;
 let user;
+let validPassword = 'pass_word';
 let token;
 let invalidToken;
 let wrongFormatToken = 'wrongformat';
@@ -43,17 +44,50 @@ describe('authManager - verifyUser', () => {
 });
 
 describe('authManager - revokeToken', () => {
-	// TODO : revokeToken
+	it('ajoute un token révoqué en base de données', async (done) => {
+		await authManager.revokeToken('token');
+		const testRevokedToken = await db.collection('token').findOne({ token: 'token' });
+		expect(testRevokedToken).not.toBe(undefined);
+		done();
+	});
 });
 
 describe('authManager - authenticateUser', () => {
-	// TODO : authenticateUser
+	it('renvoie un token de connexion si les identifiants saisis sont valides', async (done) => {
+		const email = user.email;
+		const testValidAuth = await authManager.authenticateUser(email, validPassword);
+		expect(testValidAuth).toHaveProperty('user', user);
+		expect(testValidAuth).toHaveProperty('token');
+		expect(testValidAuth.token).not.toBe(undefined);
+		done();
+	});
+	it('renvoie une erreur si les indentifiants saisis sont invalides', async (done) => {
+		const email = user.email;
+		const password = 'invalid';
+		const testInvalidAuth = async () => authManager.authenticateUser(email, password);
+		await expect(testInvalidAuth).rejects.toThrow();
+		done();
+	});
 });
 
 describe('authManager - revokeAll', () => {
-	// TODO : revokeAll
+	it("génère une nouvelle trace pour l'utilisateur", async (done) => {
+		const previousTrace = user.trace;
+		await authManager.revokeAll(user.id);
+		const newTrace = await db.collection('users').findOne({ email: user.email }).trace;
+		expect(newTrace).not.toBe(previousTrace);
+		done();
+	});
 });
 
 describe('authManager - generateTrace', () => {
-	// TODO : generateTrace
+	it('genere un identifiant de plus de 20 caractères', () => {
+		const traceTest = authManager.generateTrace();
+		expect(traceTest.length).toBeGreaterThan(20);
+	});
+	it('genere un identifiant unique à chaque exécution', () => {
+		const traceTest1 = authManager.generateTrace();
+		const traceTest2 = authManager.generateTrace();
+		expect(traceTest1).not.toBe(traceTest2);
+	});
 });

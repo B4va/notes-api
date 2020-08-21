@@ -1,5 +1,6 @@
 import buildDatabase from './src/app/core/db/index';
 import mongo from 'mongodb';
+import { hash } from './src/app/core/auth/encrypter';
 
 seed();
 
@@ -20,7 +21,7 @@ async function seed() {
 async function deleteAll(db) {
 	await db.collection('users').deleteMany({});
 	await db.collection('notes').deleteMany({});
-	await db.collection('token').deleteMany({})
+	await db.collection('token').deleteMany({});
 }
 
 /**
@@ -29,17 +30,17 @@ async function deleteAll(db) {
 async function usersSeed(db, model) {
 	await db.collection(model).insertOne({
 		email: 'email1@mail.foo',
-		password: 'password1234',
+		password: await hash('password1234'),
 		trace: '0123456789',
 	});
 	await db.collection(model).insertOne({
 		email: 'email2@mail.foo',
-		password: 'pass_word',
+		password: await hash('pass_word'),
 		trace: '2468101214',
 	});
 	await db.collection(model).insertOne({
 		email: 'email3@mail.foo',
-		password: 'p@ssword',
+		password: await hash('p@ssword'),
 		trace: '9876543210',
 	});
 }
