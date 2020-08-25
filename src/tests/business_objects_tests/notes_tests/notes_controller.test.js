@@ -4,6 +4,10 @@
 
 beforeAll(() => {});
 
+it('test', () => {
+	expect(1).toBe(1);
+});
+
 describe('notesController - rooting', () => {
 	// TODO
 });

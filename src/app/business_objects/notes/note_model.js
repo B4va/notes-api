@@ -2,7 +2,6 @@ import DataValidationError from '../../core/errors/data_validation_error';
 
 /**
  * Modélisation et validation d'une note.
- * @param {Object} noteInfo données
  * @returns {Object} note validée et normalisée
  * 
  * Une note comprends un titre pouvant être nul, un contenu pouvant être nul
@@ -11,7 +10,7 @@ import DataValidationError from '../../core/errors/data_validation_error';
  * l'identifiant de l'utilisateur est associé à la note au moment de sa création qui
  * nécessite donc qu'un utilisateur soit authentifié.
  */
-export default (noteInfo) => {
+export default () => {
 	/**
 	 * Valeurs par défaut : 
 	 * - couleurs de la note
@@ -26,15 +25,17 @@ export default (noteInfo) => {
 	let ERRORS = [];
 
 	return Object.freeze({
-		buildNew: buildNew(),
-		buildUpdate: buildUpdate(),
+		buildNew,
+		buildUpdate,
+		PRESETS,
 	});
 
 	/**
 	 * Valide et normalise une nouvelle note.
+	 * @param {Object} noteInfo note à valider
 	 * @returns {Object} note
 	 */
-	function buildNew() {
+	function buildNew(noteInfo) {
 		_validateNew(noteInfo);
 		return _normalizeNew(noteInfo);
 	}
@@ -56,46 +57,47 @@ export default (noteInfo) => {
    */
 	function _normalizeNew({ title, content, color }) {
 		return {
-			title: title,
-			content: content,
+			title: title ? title : '',
+			content: content ? content : '',
 			color: color ? color : PRESETS.colors[0],
 		};
 	}
 
 	/**
 	 * Valide et normalise la mise à jour d'une note.
+	 * @param {Object} noteInfo note à valider
 	 * @returns {Object} mises à jour de la note
 	 */
-	function buildUpdate() {
+	function buildUpdate(noteInfo) {
 		_validateUpdate(noteInfo);
 		return _nomalizeUpdate(noteInfo);
 	}
 
 	/**
    * Valide les nouveaux attributs de la note.
-   * @param {Object} noteInfo nouveaux attributs
+   * @param {Object} param0 note à valider (dstrc)
    * @throws {DataValidationError} si les données saisie sont invalides
    */
-	async function _validateUpdate(noteInfo) {
-		const validColor = noteInfo.color ? _validateColor(noteInfo.color) : true;
+	function _validateUpdate({ title, content, color } = {}) {
+		const validColor = _validateColor(color);
 		if (!validColor) throw new DataValidationError(ERRORS);
 	}
 
 	/**
    * Normalise les nouveaux attributs de la note.
-   * @param {Object} noteInfo nouveaux attributs
+   * @param {Object} nparam0 note à valider (dstrc)
    * @returns {Object} nouveaux attributs normalisés
    */
-	function _nomalizeUpdate(noteInfo) {
+	function _nomalizeUpdate({ title, content, color }) {
 		let result = {};
-		if (noteInfo.title) {
-			result.title = noteInfo.title;
+		if (title) {
+			result.title = title;
 		}
-		if (noteInfo.content) {
-			result.content = noteInfo.content;
+		if (content) {
+			result.content = content;
 		}
-		if (noteInfo.color) {
-			result.color = noteInfo.color;
+		if (color) {
+			result.color = color;
 		}
 		return result;
 	}

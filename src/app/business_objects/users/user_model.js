@@ -3,7 +3,6 @@ import usersDao from './users_dao';
 
 /**
  * Modélisation et validation d'un utilisateur.
- * @param {Object} userInfo données
  * @returns {Object} utilisateur validé et normalisé
  * 
  * Un utilisateur comprends un email unique devant répondre d'un format adapté
@@ -14,22 +13,23 @@ import usersDao from './users_dao';
  * trace associée à l'utilisateur qui sera mise à jour, révoquant de fait les tokens
  * précédemment générés. Un utilisateur peut être associé à un nombre indéfini de notes (*..1).
  */
-export default (userInfo) => {
+export default () => {
 	/**
 	 * Liste d'erreurs.
 	 */
 	let ERRORS = [];
 
 	return {
-		buildNew: buildNew(),
-		buildUpdate: buildUpdate(),
+		buildNew,
+		buildUpdate,
 	};
 
 	/**
 	 * Valide et normalise un nouvel utilisateur.
+	 * @param {Object} userInfo informations utilisateur
 	 * @returns {Object} utilisateur
 	 */
-	function buildNew() {
+	function buildNew(userInfo) {
 		_validateNew(userInfo);
 		return _normalizeNew(userInfo);
 	}
@@ -39,10 +39,11 @@ export default (userInfo) => {
    * @param {Object} param0 utilisateur à valider (dstrc)
    * @throws {DataValidationError} si les données saisies sont invalides
    */
-	async function _validateNew({ email, password, trace } = {}) {
-		const validEmail = await _validateEmail(email);
+	function _validateNew({ email, password, trace } = {}) {
+		const validEmail = _validateEmail(email);
 		const validPassword = _validatePassword(password);
-		if (!validEmail || !validPassword) throw new DataValidationError(ERRORS);
+		const validTrace = _validateTrace(trace);
+		if (!validEmail || !validPassword || !validTrace) throw new DataValidationError(ERRORS);
 	}
 
 	/**
@@ -60,34 +61,40 @@ export default (userInfo) => {
 
 	/**
 	 * Valide et normalise la mise à jour d'un utilisateur.
+	 * @param {Object} userInfo informations mises à jour
 	 * @returns {Object} mise à jour de l'utilisateur
 	 */
-	function buildUpdate() {
+	function buildUpdate(userInfo) {
 		_validateUpdate(userInfo);
 		return _normalizeUpdate(userInfo);
 	}
 
 	/**
-   * Valide les nouveaux attributs de l'utilisateur.
-   * @param {Object} userInfo nouveaux attributs
-   * @throws {DataValidationError} si les données saisie sont invalides
+   * Valide lesnouveaux  attributs d'un utilisateur.
+   * @param {Object} param0 attributs à valider (dstrc)
+   * @throws {DataValidationError} si les données saisies sont invalides
    */
-	async function _validateUpdate(userInfo) {
-		const validEmail = userInfo.email ? _validateEmail(userInfo.email) : true;
-		const validPassword = userInfo.password ? _validatePassword(userInfo.password) : true;
+	function _validateUpdate({ email, password, trace } = {}) {
+		const validEmail = email ? _validateEmail(email) : true;
+		const validPassword = password ? _validatePassword(password) : true;
 		if (!validEmail || !validPassword) throw new DataValidationError(ERRORS);
 	}
 
-	function _normalizeUpdate(userInfo) {
+	/**
+   * Normalise les attributs de l'utilisateur.
+   * @param {Object} param0 utilisateur à normaliser (destrc)
+   * @returns {Object} utilisateur normalisé
+   */
+	function _normalizeUpdate({ email, password, trace } = {}) {
 		let result = {};
-		if (userInfo.email) {
-			result.email = userInfo.email;
+		if (email) {
+			result.email = email;
 		}
-		if (userInfo.password) {
-			result.password = userInfo.password;
+		if (password) {
+			result.password = password;
 		}
-		if (userInfo.trace) {
-			result.trace = userInfo.trace;
+		if (trace) {
+			result.trace = trace;
 		}
 		return result;
 	}
@@ -128,15 +135,24 @@ export default (userInfo) => {
    * @param {Array} errors liste d'erreurs
    * @returns {boolean} true si le mot de passe est valide
    */
-	function _validatePassword(password, errors) {
+	function _validatePassword(password) {
 		// Présence
 		if (!password) {
-			errors.push('Un mot de passe doit être renseigné.');
+			ERRORS.push('Un mot de passe doit être renseigné.');
 			return false;
 		}
 		// Longueur
 		if (password.length < 6) {
-			errors.push("Le mot de passe doit être long d'au moins 6 caractères.");
+			ERRORS.push("Le mot de passe doit être long d'au moins 6 caractères.");
+			return false;
+		}
+		return true;
+	}
+
+	function _validateTrace(trace) {
+		// Présence
+		if (!trace) {
+			ERRORS.push('Une trace doit être renseignée.');
 			return false;
 		}
 		return true;
