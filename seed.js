@@ -58,8 +58,8 @@ async function tokenSeed(db, model) {
  * Notes.
  */
 async function notesSeed(db, model = undefined) {
-	const user1 = db.collection('users').findOne({ email: 'email1@mail.foo' });
-	const user2 = db.collection('users').findOne({ email: 'email2@mail.foo' });
+	const user1 = await db.collection('users').findOne({ email: 'email1@mail.foo' });
+	const user2 = await db.collection('users').findOne({ email: 'email2@mail.foo' });
 	await db.collection(model).insertOne({
 		title: 'first note',
 		content: 'Nostrud sunt eu exercitation commodo aliqua cupidatat cupidatat tempor do qui enim anim.',

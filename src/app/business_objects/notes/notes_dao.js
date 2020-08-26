@@ -22,7 +22,8 @@ export default (database) => {
    */
 	async function create(note) {
 		const db = await database;
-		return await db.collection('notes').insertOne(note);
+		const created = await db.collection('notes').insertOne(note);
+		return created.ops[0];
 	}
 
 	/**
@@ -54,6 +55,8 @@ export default (database) => {
 	async function update(noteId, noteInfo) {
 		const db = await database;
 		const id = adaptId(noteId);
+		const note = await await db.collection('notes').findOne({ _id: noteId });
+		if (!note) throw new Error();
 		return await db.collection('notes').updateOne({ _id: id }, { $set: noteInfo });
 	}
 
@@ -65,6 +68,8 @@ export default (database) => {
 	async function remove(noteId) {
 		const db = await database;
 		const id = adaptId(noteId);
+		const note = await db.collection('notes').findOne({ _id: noteId });
+		if (!note) throw new Error();
 		return await db.collection('notes').deleteOne({ _id: id });
 	}
 
@@ -73,8 +78,11 @@ export default (database) => {
    * @param {String} noteId id notes
    * @returns {Object} note
    */
-	async function removeAll(noteId) {
+	async function removeAll(userId) {
 		const db = await database;
-		return await db.collection('notes').deleteMany({});
+		const id = adaptId(userId);
+		const user = await db.collection('users').findOne({ _id: id });
+		if (!user) throw new Error();
+		return await db.collection('notes').deleteMany({ userId: userId });
 	}
 };
