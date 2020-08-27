@@ -6,15 +6,13 @@ import UniqueViolationError from '../../core/errors/unique_violation_error';
  * @param {Object} database base de données
  * @returns {Object} méthodes DAO utilisateurs
  */
-export default async (database) => {
+export default (database) => {
 	return Object.freeze({
 		create,
 		read,
 		update,
 		remove,
 	});
-
-	let db = await database;
 
 	/**
    * Crée un utilisateur.
@@ -24,8 +22,10 @@ export default async (database) => {
    */
 	async function create(user) {
 		const db = await database;
-		if (!_isEmailUnique(user.email, db)) throw new UniqueViolationError("L'adresse mail est déjà utilisée.");
-		return await db.collection('users').insertOne(user);
+		const isUnique = await _isEmailUnique(user.email, db);
+		if (!isUnique) throw new UniqueViolationError("L'adresse mail est déjà utilisée.");
+		const created = await db.collection('users').insertOne(user);
+		return created.ops[0];
 	}
 
 	async function _isEmailUnique(email, db) {
@@ -52,8 +52,11 @@ export default async (database) => {
    */
 	async function update(userId, userInfo) {
 		const db = await database;
-		if (!_isEmailUnique(userInfo.email, db)) throw new UniqueViolationError("L'adresse mail est déjà utilisée.");
 		const id = adaptId(userId);
+		const user = await db.collection('users').findOne({ _id: userId });
+		if (!user) throw new Error();
+		const isUnique = await _isEmailUnique(userInfo.email, db);
+		if (!isUnique) throw new UniqueViolationError("L'adresse mail est déjà utilisée.");
 		return await db.collection('users').updateOne({ _id: id }, { $set: userInfo });
 	}
 
@@ -65,6 +68,9 @@ export default async (database) => {
 	async function remove(userId) {
 		const db = await database;
 		const id = adaptId(userId);
+		const user = await db.collection('users').findOne({ _id: userId });
+		if (!user) throw new Error();
+		await db.collection('notes').deleteMany({ userId: userId });
 		return await db.collection('users').deleteOne({ _id: id });
 	}
 };

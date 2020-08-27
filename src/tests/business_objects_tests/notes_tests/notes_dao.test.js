@@ -94,7 +94,7 @@ describe('notesDao - update', () => {
 		const testNote = async () => await dao.update(wrongId, {});
 		expect(testNote).rejects.toThrow();
 	});
-	it("renvoie une erreur InvalidQueryError si  l'id est invalide", () => {
+	it("renvoie une erreur InvalidQueryError si l'id est invalide", () => {
 		const test = async () => await dao.update(invalidId, {});
 		expect(test).rejects.toThrow(InvalidQueryError);
 	});
