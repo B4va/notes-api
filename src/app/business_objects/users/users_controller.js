@@ -19,27 +19,31 @@ export default (usersDao, authManager) => {
 	return async (httpRequest) => {
 		switch (httpRequest.method) {
 			case 'POST':
-				return postUser(httpRequest);
+				return await postUser(httpRequest);
 			case 'GET':
-				return getUser(httpRequest);
+				return await getUser(httpRequest);
 			case 'PUT':
-				return putUser(httpRequest);
+				return await putUser(httpRequest);
 			case 'DELETE':
-				return deleteUser(httpRequest);
+				return await deleteUser(httpRequest);
 			case 'PATCH':
-				if (httpRequest.queryParams.auth === 'revoke') {
-					return revokeOneAccess(httpRequest);
-				} else if (httpRequest.queryParams.auth === 'revoke-all') {
-					return revokeAllAccess(httpRequest);
-				} else if (httpRequest.queryParams.auth === 'login') {
-					return loginUser(httpRequest);
-				} else {
-					return httpErrors.serverError();
-				}
+				return await _patch(httpRequest);
 			default:
 				return httpErrors.serverError();
 		}
 	};
+
+	async function _patch(httpRequest) {
+		if (httpRequest.queryParams.auth === 'revoke') {
+			return await revokeOneAccess(httpRequest);
+		} else if (httpRequest.queryParams.auth === 'revoke-all') {
+			return await revokeAllAccess(httpRequest);
+		} else if (httpRequest.queryParams.auth === 'login') {
+			return await loginUser(httpRequest);
+		} else {
+			return httpErrors.serverError();
+		}
+	}
 
 	/**
    * Renvoie les informations de l'utilisateur connecté.

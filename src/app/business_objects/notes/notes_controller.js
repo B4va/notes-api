@@ -17,25 +17,38 @@ export default (notesDao, authManager) => {
 	return async (httpRequest) => {
 		switch (httpRequest.method) {
 			case 'POST':
-				return postNote(httpRequest);
+				return await postNote(httpRequest);
+				break;
 			case 'GET':
-				if (httpRequest.pathParams.id) {
-					return getNote(httpRequest);
-				} else {
-					return getNotes(httpRequest);
-				}
+				return await _get(httpRequest);
+				break;
 			case 'PUT':
-				return putNote(httpRequest);
+				return await putNote(httpRequest);
+				break;
 			case 'DELETE':
-				if (httpRequest.pathParams.id) {
-					return deleteNote(httpRequest);
-				} else {
-					return deleteNotes(httpRequest);
-				}
+				return await _delete(httpRequest);
+				break;
 			default:
 				return httpErrors.serverError();
+				break;
 		}
 	};
+
+	async function _get(httpRequest) {
+		if (httpRequest.pathParams.id) {
+			return await getNote(httpRequest);
+		} else {
+			return await getNotes(httpRequest);
+		}
+	}
+
+	async function _delete(httpRequest) {
+		if (httpRequest.pathParams.id) {
+			return await deleteNote(httpRequest);
+		} else {
+			return await deleteNotes(httpRequest);
+		}
+	}
 
 	/**
    * Renvoie les informations d'une note appartenant
@@ -95,12 +108,12 @@ export default (notesDao, authManager) => {
 		const token = adaptAuth(httpRequest);
 		const noteInfo = httpRequest.body;
 		let userId;
+		let note;
 		try {
 			userId = await authManager.verifyUser(token);
 		} catch (e) {
 			return httpErrors.authValidationError();
 		}
-		let note;
 		try {
 			note = Note(noteInfo).buildNew;
 			note.userId = userId;
@@ -126,12 +139,12 @@ export default (notesDao, authManager) => {
 	async function putNote(httpRequest) {
 		const token = adaptAuth(httpRequest);
 		const noteInfo = httpRequest.body;
+		let note;
 		try {
 			await authManager.verifyUser(token);
 		} catch (e) {
 			return httpErrors.authValidationError();
 		}
-		let note;
 		try {
 			note = Note(noteInfo).buildUpdate;
 		} catch (e) {
